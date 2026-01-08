@@ -1,14 +1,28 @@
-export default async function HotelsPage() {
-  // Fetch hotels from our API
-  const baseUrl = process.env.VERCEL_URL 
-  ? `https://${process.env.VERCEL_URL}` 
-  : 'http://localhost:3000'
-  
-const res = await fetch(`${baseUrl}/api/hotels`,
-{
-    cache: 'no-store'
-  })
-  const hotels = await res.json()
+export default function HotelsPage() {
+  const hotels = [
+    {
+      id: '1',
+      name: 'Hilton Garden Inn - Airport',
+      city: 'Dallas',
+      state: 'TX',
+      rating: 4.5,
+      crewFriendly: true,
+      has24HourCheckin: true,
+      hasBlackoutCurtains: true,
+      noiseLevel: 'Quiet'
+    },
+    {
+      id: '2',
+      name: 'Courtyard Marriott',
+      city: 'Phoenix',
+      state: 'AZ',
+      rating: 4.0,
+      crewFriendly: true,
+      has24HourCheckin: false,
+      hasBlackoutCurtains: true,
+      noiseLevel: 'Moderate'
+    }
+  ]
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
