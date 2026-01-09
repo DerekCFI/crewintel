@@ -22,6 +22,12 @@ export default function RootLayout({ children }) {
               <Link href="/hotels/add" className="hover:underline">
                 Add Hotel
               </Link>
+              <Link href="/fbos" className="hover:underline">
+                FBOs
+              </Link>
+              <Link href="/fbos/add" className="hover:underline">
+              Add FBO
+            </Link>
             </div>
           </div>
         </nav>

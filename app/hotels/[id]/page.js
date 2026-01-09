@@ -4,7 +4,8 @@ import Link from 'next/link'
 export const revalidate = 0
 
 export default async function HotelDetailPage({ params }) {
-  const { id } = params
+  const { id } = await params
+  console.log('Looking for hotel with ID:', id)
   let hotel = null
   
   try {
@@ -15,6 +16,8 @@ export default async function HotelDetailPage({ params }) {
       const response = await fetch(hotelsBlob.url)
       const hotels = await response.json()
       hotel = hotels.find(h => h.id === id)
+      console.log('Found hotel:', hotel)
+console.log('All hotels:', hotels)
     }
   } catch (error) {
     console.error('Error loading hotel:', error)
