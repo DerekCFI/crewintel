@@ -134,7 +134,7 @@ export default function AddReviewPage({ params }) {
         // Postgres is instant - no wait needed!
         window.location.href = `/${businessType}s/${businessId}`
       }
-      } else {
+       else {
         alert('Error submitting review')
         setSubmitting(false)
       }
