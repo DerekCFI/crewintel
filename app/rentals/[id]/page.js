@@ -1,9 +1,9 @@
 import { list } from '@vercel/blob'
-import Link from 'next/link'
 import { neon } from '@neondatabase/serverless'
-export const dynamic = 'force-dynamic'
+import Link from 'next/link'
 
 export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 async function getReviews(businessId) {
   try {
@@ -29,7 +29,7 @@ export default async function RentalDetailPage({ params }) {
     const rentalsBlob = blobs.find(b => b.pathname === 'rentals.json')
     
     if (rentalsBlob) {
-      const response = await fetch(rentalsBlob.url)
+      const response = await fetch(rentalsBlob.url, { cache: 'no-store' })
       const rentals = await response.json()
       rental = rentals.find(r => r.id === id)
     }
@@ -119,9 +119,9 @@ export default async function RentalDetailPage({ params }) {
                 <div key={review.id} className="bg-white rounded-lg shadow p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-4">
-                      <span className="text-2xl font-bold text-blue-600">{review.overallRating}/5</span>
+                      <span className="text-2xl font-bold text-blue-600">{review.overall_rating}/5</span>
                       <div className="text-sm text-gray-500">
-                        {review.createdAt ? new Date(review.createdAt).toLocaleDateString() : 'N/A'}
+                        {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'N/A'}
                       </div>
                     </div>
                   </div>
@@ -129,15 +129,15 @@ export default async function RentalDetailPage({ params }) {
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div className="text-sm">
                       <span className="text-gray-600">Vehicle Quality:</span>
-                      <span className="font-semibold ml-2">{review.vehicleQualityRating}/5</span>
+                      <span className="font-semibold ml-2">{review.vehicle_quality_rating}/5</span>
                     </div>
                     <div className="text-sm">
                       <span className="text-gray-600">Customer Service:</span>
-                      <span className="font-semibold ml-2">{review.customerServiceRating}/5</span>
+                      <span className="font-semibold ml-2">{review.customer_service_rating}/5</span>
                     </div>
                   </div>
                   
-                  <p className="text-gray-700 leading-relaxed">{review.reviewText}</p>
+                  <p className="text-gray-700 leading-relaxed">{review.review_text}</p>
                 </div>
               ))}
             </div>
