@@ -75,3 +75,8 @@ export default async function FBODetailPage({ params }) {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </main>
+  )
+}
