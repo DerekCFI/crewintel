@@ -12,22 +12,21 @@ export default function AddReviewPage({ params }) {
   const [loading, setLoading] = useState(true)
   
   const [formData, setFormData] = useState({
-    overallRating: 5,
+    overallRating: '',
     reviewText: '',
     // Hotel criteria
-    cleanlinessRating: 5,
-    staffRating: 5,
-    valueRating: 5,
+    cleanlinessRating: '',
+    staffRating: '',
+    valueRating: '',
     // FBO criteria
-    serviceRating: 5,
-    facilitiesRating: 5,
+    serviceRating: '',
+    facilitiesRating: '',
     // Restaurant criteria
-    foodQualityRating: 5,
-    serviceSpeedRating: 5,
+    foodQualityRating: '',
+    serviceSpeedRating: '',
     // Car Rental criteria
-    vehicleQualityRating: 5,
-    customerServiceRating: 5,
-
+    vehicleQualityRating: '',
+    customerServiceRating: '',
   })
 
   useEffect(() => {
@@ -51,15 +50,74 @@ export default function AddReviewPage({ params }) {
     loadParams()
   }, [params])
 
+  const StarRating = ({ value, onChange, label }) => (
+    <div>
+      <label className="block text-sm font-medium mb-2">{label}</label>
+      <div className="flex gap-2">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            onClick={() => onChange(star.toString())}
+            onMouseEnter={(e) => {
+              const buttons = e.currentTarget.parentElement.querySelectorAll('button');
+              buttons.forEach((btn, idx) => {
+                if (idx < star) {
+                  btn.style.color = '#93c5fd';
+                } else {
+                  btn.style.color = value && parseFloat(value) > idx ? '#2563eb' : '#d1d5db';
+                }
+              });
+            }}
+            onMouseLeave={(e) => {
+              const buttons = e.currentTarget.parentElement.querySelectorAll('button');
+              buttons.forEach((btn, idx) => {
+                btn.style.color = value && parseFloat(value) > idx ? '#2563eb' : '#d1d5db';
+              });
+            }}
+            className="text-3xl transition-colors"
+            style={{ color: value && parseFloat(value) >= star ? '#2563eb' : '#d1d5db' }}
+          >
+            ★
+          </button>
+        ))}
+        <span className="ml-2 text-gray-600 self-center">({value || '0'}/5)</span>
+      </div>
+    </div>
+  )
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Validate that overall rating is set
+    if (!formData.overallRating) {
+      alert('Please select an overall rating')
+      return
+    }
     
     const review = {
       businessType,
       businessId,
       businessName: business?.name,
-      ...formData,
+      overallRating: parseFloat(formData.overallRating),
+      reviewText: formData.reviewText,
       createdAt: new Date().toISOString()
+    }
+    
+    // Add category-specific ratings
+    if (businessType === 'hotel') {
+      review.cleanlinessRating = parseFloat(formData.cleanlinessRating) || 5
+      review.staffRating = parseFloat(formData.staffRating) || 5
+      review.valueRating = parseFloat(formData.valueRating) || 5
+    } else if (businessType === 'fbo') {
+      review.serviceRating = parseFloat(formData.serviceRating) || 5
+      review.facilitiesRating = parseFloat(formData.facilitiesRating) || 5
+    } else if (businessType === 'restaurant') {
+      review.foodQualityRating = parseFloat(formData.foodQualityRating) || 5
+      review.serviceSpeedRating = parseFloat(formData.serviceSpeedRating) || 5
+    } else if (businessType === 'rental') {
+      review.vehicleQualityRating = parseFloat(formData.vehicleQualityRating) || 5
+      review.customerServiceRating = parseFloat(formData.customerServiceRating) || 5
     }
     
     try {
@@ -71,7 +129,10 @@ export default function AddReviewPage({ params }) {
       
       if (response.ok) {
         alert('Review submitted successfully!')
-        router.push(`/${businessType}s/${businessId}`)
+        router.refresh()
+        setTimeout(() => {
+          router.push(`/${businessType}s/${businessId}`)
+        }, 100)
       } else {
         alert('Error submitting review')
       }
@@ -112,154 +173,83 @@ export default function AddReviewPage({ params }) {
         <p className="text-xl text-gray-600 mb-8">{business.name}</p>
         
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-2">Overall Rating</label>
-            <input
-              type="number"
-              min="1"
-              max="5"
-              step="0.5"
-              required
-              className="w-full border rounded p-2"
-              value={formData.overallRating}
-              onChange={(e) => setFormData({...formData, overallRating: parseFloat(e.target.value)})}
-            />
-          </div>
+          <StarRating 
+            value={formData.overallRating}
+            onChange={(val) => setFormData({...formData, overallRating: val})}
+            label="Overall Rating *"
+          />
 
           {/* Hotel-specific ratings */}
           {businessType === 'hotel' && (
             <>
-              <div>
-                <label className="block text-sm font-medium mb-2">Cleanliness Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.cleanlinessRating}
-                  onChange={(e) => setFormData({...formData, cleanlinessRating: parseFloat(e.target.value)})}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Staff Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.staffRating}
-                  onChange={(e) => setFormData({...formData, staffRating: parseFloat(e.target.value)})}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Value Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.valueRating}
-                  onChange={(e) => setFormData({...formData, valueRating: parseFloat(e.target.value)})}
-                />
-              </div>
+              <StarRating 
+                value={formData.cleanlinessRating}
+                onChange={(val) => setFormData({...formData, cleanlinessRating: val})}
+                label="Cleanliness Rating"
+              />
+              <StarRating 
+                value={formData.staffRating}
+                onChange={(val) => setFormData({...formData, staffRating: val})}
+                label="Staff Rating"
+              />
+              <StarRating 
+                value={formData.valueRating}
+                onChange={(val) => setFormData({...formData, valueRating: val})}
+                label="Value Rating"
+              />
             </>
           )}
 
           {/* FBO-specific ratings */}
           {businessType === 'fbo' && (
             <>
-              <div>
-                <label className="block text-sm font-medium mb-2">Service Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.serviceRating}
-                  onChange={(e) => setFormData({...formData, serviceRating: parseFloat(e.target.value)})}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Facilities Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.facilitiesRating}
-                  onChange={(e) => setFormData({...formData, facilitiesRating: parseFloat(e.target.value)})}
-                />
-              </div>
+              <StarRating 
+                value={formData.serviceRating}
+                onChange={(val) => setFormData({...formData, serviceRating: val})}
+                label="Service Rating"
+              />
+              <StarRating 
+                value={formData.facilitiesRating}
+                onChange={(val) => setFormData({...formData, facilitiesRating: val})}
+                label="Facilities Rating"
+              />
             </>
           )}
 
           {/* Restaurant-specific ratings */}
           {businessType === 'restaurant' && (
             <>
-              <div>
-                <label className="block text-sm font-medium mb-2">Food Quality Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.foodQualityRating}
-                  onChange={(e) => setFormData({...formData, foodQualityRating: parseFloat(e.target.value)})}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Service Speed Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.serviceSpeedRating}
-                  onChange={(e) => setFormData({...formData, serviceSpeedRating: parseFloat(e.target.value)})}
-                />
-              </div>
+              <StarRating 
+                value={formData.foodQualityRating}
+                onChange={(val) => setFormData({...formData, foodQualityRating: val})}
+                label="Food Quality Rating"
+              />
+              <StarRating 
+                value={formData.serviceSpeedRating}
+                onChange={(val) => setFormData({...formData, serviceSpeedRating: val})}
+                label="Service Speed Rating"
+              />
             </>
           )}
 
           {/* Car Rental-specific ratings */}
           {businessType === 'rental' && (
             <>
-              <div>
-                <label className="block text-sm font-medium mb-2">Vehicle Quality Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.vehicleQualityRating}
-                  onChange={(e) => setFormData({...formData, vehicleQualityRating: parseFloat(e.target.value)})}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Customer Service Rating</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  className="w-full border rounded p-2"
-                  value={formData.customerServiceRating}
-                  onChange={(e) => setFormData({...formData, customerServiceRating: parseFloat(e.target.value)})}
-                />
-              </div>
+              <StarRating 
+                value={formData.vehicleQualityRating}
+                onChange={(val) => setFormData({...formData, vehicleQualityRating: val})}
+                label="Vehicle Quality Rating"
+              />
+              <StarRating 
+                value={formData.customerServiceRating}
+                onChange={(val) => setFormData({...formData, customerServiceRating: val})}
+                label="Customer Service Rating"
+              />
             </>
           )}
 
           <div>
-            <label className="block text-sm font-medium mb-2">Your Review</label>
+            <label className="block text-sm font-medium mb-2">Your Review *</label>
             <textarea
               required
               rows="6"

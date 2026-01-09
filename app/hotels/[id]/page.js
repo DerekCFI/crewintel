@@ -1,5 +1,6 @@
 import { list } from '@vercel/blob'
 import Link from 'next/link'
+export const dynamic = 'force-dynamic'
 
 export const revalidate = 0
 
@@ -9,9 +10,15 @@ async function getReviews(businessId) {
     const reviewsBlob = blobs.find(b => b.pathname === 'reviews.json')
     
     if (reviewsBlob) {
-      const response = await fetch(reviewsBlob.url)
-      const allReviews = await response.json()
-      return allReviews.filter(r => r.businessType === 'hotel' && r.businessId === businessId)
+      const response = await fetch(reviewsBlob.url, { 
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' }
+      })
+      
+      if (response.ok) {
+        const allReviews = await response.json()
+        return allReviews.filter(r => r.businessType === 'hotel' && r.businessId === businessId)
+      }
     }
   } catch (error) {
     console.error('Error loading reviews:', error)
