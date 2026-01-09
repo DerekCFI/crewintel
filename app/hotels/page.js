@@ -1,4 +1,5 @@
 import { list } from '@vercel/blob'
+import Link from 'next/link'
 
 export const revalidate = 0 // Don't cache this page
 
@@ -41,7 +42,7 @@ export default async function HotelsPage() {
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {hotels.map((hotel) => (
-            <div key={hotel.id} className="bg-white rounded-lg shadow p-6">
+            <Link key={hotel.id} href={`/hotels/${hotel.id}`} className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition block">
               <h2 className="text-xl font-bold mb-2">{hotel.name}</h2>
               <p className="text-gray-600 mb-4">{hotel.city}, {hotel.state}</p>
               
@@ -63,7 +64,7 @@ export default async function HotelsPage() {
                   <span>{hotel.noiseLevel}</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

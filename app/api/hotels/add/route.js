@@ -1,4 +1,4 @@
-import { put, list } from '@vercel/blob'
+import { put, list, del } from '@vercel/blob'
 import { NextResponse } from 'next/server'
 
 export async function POST(request) {
@@ -11,10 +11,13 @@ export async function POST(request) {
     
     // Get existing hotels
     let hotels = []
+    let oldBlobUrl = null
+    
     try {
       const { blobs } = await list()
       const hotelsBlob = blobs.find(b => b.pathname === 'hotels.json')
       if (hotelsBlob) {
+        oldBlobUrl = hotelsBlob.url
         const response = await fetch(hotelsBlob.url)
         hotels = await response.json()
       }
@@ -25,7 +28,12 @@ export async function POST(request) {
     // Add new hotel
     hotels.push(newHotel)
     
-    // Save back to blob
+    // Delete old blob if it exists
+    if (oldBlobUrl) {
+      await del(oldBlobUrl)
+    }
+    
+    // Save new blob
     await put('hotels.json', JSON.stringify(hotels, null, 2), {
       access: 'public',
       contentType: 'application/json',
