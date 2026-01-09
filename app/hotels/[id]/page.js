@@ -5,7 +5,6 @@ export const revalidate = 0
 
 export default async function HotelDetailPage({ params }) {
   const { id } = await params
-  console.log('Looking for hotel with ID:', id)
   let hotel = null
   
   try {
@@ -16,8 +15,6 @@ export default async function HotelDetailPage({ params }) {
       const response = await fetch(hotelsBlob.url)
       const hotels = await response.json()
       hotel = hotels.find(h => h.id === id)
-      console.log('Found hotel:', hotel)
-console.log('All hotels:', hotels)
     }
   } catch (error) {
     console.error('Error loading hotel:', error)
@@ -39,9 +36,18 @@ console.log('All hotels:', hotels)
   return (
     <main className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
-        <Link href="/hotels" className="text-blue-600 hover:underline mb-4 inline-block">
-          ← Back to Hotels
-        </Link>
+        <div className="flex justify-between items-center mb-6">
+          <Link href="/hotels" className="text-blue-600 hover:underline">
+            ← Back to Hotels
+          </Link>
+          <Link 
+  href={`/review/hotel/${hotel.id}`}
+  className="bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 whitespace-nowrap"
+  style={{ paddingLeft: '24px', paddingRight: '24px' }}
+>
+  Leave Review
+</Link>
+        </div>
         
         <div className="bg-white rounded-lg shadow p-8">
           <h1 className="text-4xl font-bold mb-2">{hotel.name}</h1>
@@ -73,8 +79,7 @@ console.log('All hotels:', hotels)
             <div>
               <h2 className="text-2xl font-semibold mb-4">Information</h2>
               <div className="space-y-2 text-gray-600">
-                <p><span className="font-medium">Added:</span> {new Date(hotel.createdAt).toLocaleDateString()}</p>
-                <p><span className="font-medium">ID:</span> {hotel.id}</p>
+                <p><span className="font-medium">Added:</span> {hotel.createdAt ? hotel.createdAt.split('T')[0] : 'N/A'}</p>
               </div>
             </div>
           </div>

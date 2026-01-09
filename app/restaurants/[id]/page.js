@@ -36,9 +36,19 @@ export default async function RestaurantDetailPage({ params }) {
   return (
     <main className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
-        <Link href="/restaurants" className="text-blue-600 hover:underline mb-4 inline-block">
-          ← Back to Restaurants
-        </Link>
+        <div className="flex justify-between items-center mb-6">
+          <Link href="/restaurants" className="text-blue-600 hover:underline">
+            ← Back to Restaurants
+          </Link>
+          <Link 
+  href={`/review/restaurant/${restaurant.id}`}
+  className="bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 whitespace-nowrap"
+  style={{ paddingLeft: '28px', paddingRight: '28px' }}
+>
+  Leave Review
+</Link>
+
+        </div>
         
         <div className="bg-white rounded-lg shadow p-8">
           <h1 className="text-4xl font-bold mb-2">{restaurant.name}</h1>
@@ -75,8 +85,7 @@ export default async function RestaurantDetailPage({ params }) {
             <div>
               <h2 className="text-2xl font-semibold mb-4">Information</h2>
               <div className="space-y-2 text-gray-600">
-                <p><span className="font-medium">Added:</span> {new Date(restaurant.createdAt).toLocaleDateString()}</p>
-                <p><span className="font-medium">ID:</span> {restaurant.id}</p>
+                <p><span className="font-medium">Added:</span> {restaurant.createdAt ? restaurant.createdAt.split('T')[0] : 'N/A'}</p>
               </div>
             </div>
           </div>
