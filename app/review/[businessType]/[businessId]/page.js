@@ -10,6 +10,7 @@ export default function AddReviewPage({ params }) {
   const [businessId, setBusinessId] = useState(null)
   const [business, setBusiness] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
   
   const [formData, setFormData] = useState({
     overallRating: '',
@@ -95,6 +96,8 @@ export default function AddReviewPage({ params }) {
       return
     }
     
+    setSubmitting(true)
+    
     const review = {
       businessType,
       businessId,
@@ -128,14 +131,17 @@ export default function AddReviewPage({ params }) {
       })
       
       if (response.ok) {
-        alert('Review submitted successfully!')
-        // Force a hard page reload instead of client-side navigation
+        // Wait 3 seconds to let blob storage sync
+        await new Promise(resolve => setTimeout(resolve, 3000))
+        // Force a hard page reload
         window.location.href = `/${businessType}s/${businessId}`
       } else {
         alert('Error submitting review')
+        setSubmitting(false)
       }
     } catch (error) {
       alert('Error: ' + error.message)
+      setSubmitting(false)
     }
   }
 
@@ -155,6 +161,21 @@ export default function AddReviewPage({ params }) {
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold mb-4">Business Not Found</h1>
           <Link href="/" className="text-blue-600 hover:underline">← Go Home</Link>
+        </div>
+      </main>
+    )
+  }
+
+  // Loading overlay when submitting
+  if (submitting) {
+    return (
+      <main className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-lg shadow p-12 text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Saving Your Review...</h2>
+            <p className="text-gray-600">Please wait while we save your feedback</p>
+          </div>
         </div>
       </main>
     )
