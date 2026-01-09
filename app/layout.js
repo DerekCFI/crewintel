@@ -25,6 +25,10 @@ export default function RootLayout({ children }) {
               <Link href="/restaurants" className="hover:underline">
                 Restaurants
               </Link>
+              <Link href="/rentals" className="hover:underline">
+                Car Rentals
+              </Link>
+
               <Link href="/add" className="bg-white text-blue-600 px-4 py-2 rounded font-semibold hover:bg-gray-100">
                 + Add Location
               </Link>

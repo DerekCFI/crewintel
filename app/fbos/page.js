@@ -11,7 +11,7 @@ export default async function FBOsPage() {
     const fbosBlob = blobs.find(b => b.pathname === 'fbos.json')
     
     if (fbosBlob) {
-      const response = await fetch(fbosBlob.url)
+      const response = await fetch(fbosBlob.url, { cache: 'no-store' })
       fbos = await response.json()
     }
   } catch (error) {

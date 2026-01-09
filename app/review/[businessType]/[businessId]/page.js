@@ -24,6 +24,10 @@ export default function AddReviewPage({ params }) {
     // Restaurant criteria
     foodQualityRating: 5,
     serviceSpeedRating: 5,
+    // Car Rental criteria
+    vehicleQualityRating: 5,
+    customerServiceRating: 5,
+
   })
 
   useEffect(() => {
@@ -219,6 +223,36 @@ export default function AddReviewPage({ params }) {
                   className="w-full border rounded p-2"
                   value={formData.serviceSpeedRating}
                   onChange={(e) => setFormData({...formData, serviceSpeedRating: parseFloat(e.target.value)})}
+                />
+              </div>
+            </>
+          )}
+
+          {/* Car Rental-specific ratings */}
+          {businessType === 'rental' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium mb-2">Vehicle Quality Rating</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  step="0.5"
+                  className="w-full border rounded p-2"
+                  value={formData.vehicleQualityRating}
+                  onChange={(e) => setFormData({...formData, vehicleQualityRating: parseFloat(e.target.value)})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Customer Service Rating</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  step="0.5"
+                  className="w-full border rounded p-2"
+                  value={formData.customerServiceRating}
+                  onChange={(e) => setFormData({...formData, customerServiceRating: parseFloat(e.target.value)})}
                 />
               </div>
             </>

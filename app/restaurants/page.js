@@ -11,7 +11,7 @@ export default async function RestaurantsPage() {
     const restaurantsBlob = blobs.find(b => b.pathname === 'restaurants.json')
     
     if (restaurantsBlob) {
-      const response = await fetch(restaurantsBlob.url)
+      const response = await fetch(restaurantsBlob.url, { cache: 'no-store' })
       restaurants = await response.json()
     }
   } catch (error) {

@@ -12,7 +12,7 @@ export default async function HotelsPage() {
     const hotelsBlob = blobs.find(b => b.pathname === 'hotels.json')
     
     if (hotelsBlob) {
-      const response = await fetch(hotelsBlob.url)
+      const response = await fetch(hotelsBlob.url, { cache: 'no-store' })
       hotels = await response.json()
     }
   } catch (error) {

@@ -11,7 +11,7 @@ export default function AddLocationPage() {
     name: '',
     city: '',
     state: '',
-    rating: 5,
+    rating: '',
     
     // Hotel-specific
     has24HourCheckin: false,
@@ -29,7 +29,13 @@ export default function AddLocationPage() {
     lateNightService: false,
     easyParking: false,
     hasHealthyOptions: false,
-    priceRange: '$$'
+    priceRange: '$$',
+    
+    // Car Rental-specific
+    airportPickup: false,
+    afterHoursReturn: false,
+    crewDiscounts: false,
+    vehicleSelection: 'Good',
   })
 
   const handleSubmit = async (e) => {
@@ -40,7 +46,7 @@ export default function AddLocationPage() {
       name: formData.name,
       city: formData.city,
       state: formData.state,
-      rating: formData.rating
+      rating: parseFloat(formData.rating)
     }
     
     if (category === 'hotel') {
@@ -67,6 +73,14 @@ export default function AddLocationPage() {
         hasHealthyOptions: formData.hasHealthyOptions,
         priceRange: formData.priceRange
       }
+    } else if (category === 'rental') {
+      payload = {
+        ...payload,
+        airportPickup: formData.airportPickup,
+        afterHoursReturn: formData.afterHoursReturn,
+        crewDiscounts: formData.crewDiscounts,
+        vehicleSelection: formData.vehicleSelection
+      }
     }
     
     try {
@@ -78,7 +92,11 @@ export default function AddLocationPage() {
       
       if (response.ok) {
         alert(`${category.charAt(0).toUpperCase() + category.slice(1)} saved successfully!`)
-        router.push(`/${category}s`)
+        // Force refresh and navigate
+        router.refresh()
+        setTimeout(() => {
+          router.push(`/${category}s`)
+        }, 100)
       } else {
         alert(`Error saving ${category}`)
       }
@@ -104,13 +122,14 @@ export default function AddLocationPage() {
               <option value="hotel">Hotel</option>
               <option value="fbo">FBO</option>
               <option value="restaurant">Restaurant</option>
+              <option value="rental">Car Rental</option>
             </select>
           </div>
 
           {/* Common Fields */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              {category === 'hotel' ? 'Hotel' : category === 'fbo' ? 'FBO' : 'Restaurant'} Name
+              {category === 'hotel' ? 'Hotel' : category === 'fbo' ? 'FBO' : category === 'restaurant' ? 'Restaurant' : 'Car Rental Company'} Name
             </label>
             <input
               type="text"
@@ -176,17 +195,41 @@ export default function AddLocationPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Rating (1-5)</label>
-            <input
-              type="number"
-              min="1"
-              max="5"
-              step="0.5"
-              className="w-full border rounded p-2"
-              value={formData.rating}
-              onChange={(e) => setFormData({...formData, rating: parseFloat(e.target.value)})}
-            />
-          </div>
+  <label className="block text-sm font-medium mb-2">Rating</label>
+  <div className="flex gap-2">
+    {[1, 2, 3, 4, 5].map((star) => (
+      <button
+        key={star}
+        type="button"
+        onClick={() => setFormData({...formData, rating: star.toString()})}
+        onMouseEnter={(e) => {
+          // Highlight this star and all before it on hover
+          const buttons = e.currentTarget.parentElement.querySelectorAll('button');
+          buttons.forEach((btn, idx) => {
+            if (idx < star) {
+              btn.style.color = '#93c5fd'; // Light blue on hover
+            } else {
+              btn.style.color = parseFloat(formData.rating) > idx ? '#2563eb' : '#d1d5db'; // Keep selected or gray
+            }
+          });
+        }}
+        onMouseLeave={(e) => {
+          // Reset to actual rating when not hovering
+          const buttons = e.currentTarget.parentElement.querySelectorAll('button');
+          buttons.forEach((btn, idx) => {
+            btn.style.color = parseFloat(formData.rating) > idx ? '#2563eb' : '#d1d5db';
+          });
+        }}
+        className="text-4xl transition-colors"
+        style={{ color: parseFloat(formData.rating) >= star ? '#2563eb' : '#d1d5db' }}
+      >
+        ★
+      </button>
+    ))}
+    <span className="ml-2 text-gray-600 self-center">({formData.rating}/5)</span>
+  </div>
+</div>
+
 
           {/* Hotel-Specific Fields */}
           {category === 'hotel' && (
@@ -317,6 +360,58 @@ export default function AddLocationPage() {
                   />
                   <span>Healthy Options Available</span>
                 </label>
+              </div>
+            </>
+          )}
+
+          {/* Car Rental-Specific Fields */}
+          {category === 'rental' && (
+            <>
+              <div>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={formData.airportPickup}
+                    onChange={(e) => setFormData({...formData, airportPickup: e.target.checked})}
+                  />
+                  <span>Airport Pickup Available</span>
+                </label>
+              </div>
+
+              <div>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={formData.afterHoursReturn}
+                    onChange={(e) => setFormData({...formData, afterHoursReturn: e.target.checked})}
+                  />
+                  <span>After Hours Return Available</span>
+                </label>
+              </div>
+
+              <div>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={formData.crewDiscounts}
+                    onChange={(e) => setFormData({...formData, crewDiscounts: e.target.checked})}
+                  />
+                  <span>Crew Discounts Available</span>
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Vehicle Selection</label>
+                <select
+                  className="w-full border rounded p-2"
+                  value={formData.vehicleSelection}
+                  onChange={(e) => setFormData({...formData, vehicleSelection: e.target.value})}
+                >
+                  <option>Excellent</option>
+                  <option>Good</option>
+                  <option>Fair</option>
+                  <option>Limited</option>
+                </select>
               </div>
             </>
           )}
