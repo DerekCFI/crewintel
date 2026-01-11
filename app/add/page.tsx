@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import StarRating from '../components/StarRating'
 import PriceRating from '../components/PriceRating'
@@ -70,6 +70,10 @@ export default function AddLocationPage() {
     restaurantWifiAvailable: false,
     atmosphere: '',
     restaurantDistanceFromAirport: '',
+    healthyOptions: false,
+    vegetarianOptions: false,
+    veganOptions: false,
+    glutenFreeOptions: false,
 
     // Car Rental fields
     rentalProcessSpeed: 0,
@@ -83,8 +87,106 @@ export default function AddLocationPage() {
     crewRatesAvailable: false,
     rentalLocation: '',
   })
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Track the previous category to detect changes
+  const prevCategoryRef = useRef(formData.category)
+
+  // Reset category-specific fields when category changes
+  useEffect(() => {
+    // Skip on initial mount (when prevCategory is empty)
+    if (prevCategoryRef.current === '' && formData.category === '') {
+      return
+    }
+
+    // Only reset if category actually changed
+    if (prevCategoryRef.current !== formData.category && prevCategoryRef.current !== '') {
+      // Reset all category-specific fields to default values
+      setFormData(prev => ({
+        // Preserve these universal fields
+        category: prev.category,
+        airport: prev.airport,
+        locationName: prev.locationName,
+        address: prev.address,
+        phone: prev.phone,
+        latitude: prev.latitude,
+        longitude: prev.longitude,
+        visitDate: prev.visitDate,
+        overallRating: prev.overallRating,
+        reviewText: prev.reviewText,
+
+        // Reset aircraft type (FBO field)
+        aircraftType: '',
+
+        // Reset all hotel fields to defaults
+        bedQuality: 0,
+        noiseLevel: '',
+        blackoutCurtains: false,
+        blackoutEffectiveness: 0,
+        roomCleanliness: 0,
+        checkinExperience: 0,
+        staffResponsiveness: '',
+        wifiQuality: 0,
+        showerQuality: 0,
+        parkingSituation: '',
+        breakfastAvailable: false,
+        breakfastQuality: 0,
+        crewRecognition: false,
+        laundryAvailable: '',
+        fitnessCenter: false,
+        shuttleService: false,
+        distanceFromAirport: '',
+
+        // Reset all FBO fields to defaults
+        serviceSpeed: 0,
+        fuelPricing: '',
+        crewLoungeQuality: 0,
+        crewCarAvailability: '',
+        staffAttitude: 0,
+        passengerCrewFocus: '',
+        parkingRampSpace: '',
+        twentyfourSevenService: false,
+        lateNightServiceSpeed: '',
+        fboAmenitiesQuality: 0,
+        communication: 0,
+        hangarAvailability: '',
+        cateringAvailable: false,
+        bathroomQuality: 0,
+        fboWifiQuality: 0,
+
+        // Reset all restaurant fields to defaults
+        foodQuality: 0,
+        restaurantServiceSpeed: 0,
+        portionSize: '',
+        pricePoint: 0,
+        hoursOfOperation: '',
+        takeoutQuality: 0,
+        restaurantWifiAvailable: false,
+        atmosphere: '',
+        restaurantDistanceFromAirport: '',
+        healthyOptions: false,
+        vegetarianOptions: false,
+        veganOptions: false,
+        glutenFreeOptions: false,
+
+        // Reset all car rental fields to defaults
+        rentalProcessSpeed: 0,
+        vehicleCondition: 0,
+        upsellPressure: '',
+        afterHoursAccess: false,
+        fboDelivery: false,
+        returnFlexibility: 0,
+        staffHelpfulness: 0,
+        pricingTransparency: '',
+        crewRatesAvailable: false,
+        rentalLocation: '',
+      }))
+    }
+
+    // Update the ref to the current category
+    prevCategoryRef.current = formData.category
+  }, [formData.category])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -803,6 +905,62 @@ export default function AddLocationPage() {
                   />
                   <label htmlFor="restaurantWifiAvailable" className="ml-3 text-sm font-semibold text-gray-700">
                     Wi-Fi Available
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="healthyOptions"
+                    name="healthyOptions"
+                    checked={formData.healthyOptions}
+                    onChange={handleChange}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="healthyOptions" className="ml-3 text-sm font-semibold text-gray-700">
+                    Healthy Options Available
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="vegetarianOptions"
+                    name="vegetarianOptions"
+                    checked={formData.vegetarianOptions}
+                    onChange={handleChange}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="vegetarianOptions" className="ml-3 text-sm font-semibold text-gray-700">
+                    Vegetarian Options Available
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="veganOptions"
+                    name="veganOptions"
+                    checked={formData.veganOptions}
+                    onChange={handleChange}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="veganOptions" className="ml-3 text-sm font-semibold text-gray-700">
+                    Vegan Options Available
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="glutenFreeOptions"
+                    name="glutenFreeOptions"
+                    checked={formData.glutenFreeOptions}
+                    onChange={handleChange}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="glutenFreeOptions" className="ml-3 text-sm font-semibold text-gray-700">
+                    Gluten-Free Options Available
                   </label>
                 </div>
               </>

@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
 
+/*
+ * Database Schema for Restaurant Fields:
+ *
+ * ALTER TABLE reviews ADD COLUMN healthy_options BOOLEAN;
+ * ALTER TABLE reviews ADD COLUMN vegetarian_options BOOLEAN;
+ * ALTER TABLE reviews ADD COLUMN vegan_options BOOLEAN;
+ * ALTER TABLE reviews ADD COLUMN gluten_free_options BOOLEAN;
+ */
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -77,6 +86,10 @@ export async function POST(request: Request) {
         restaurant_wifi_available,
         atmosphere,
         restaurant_distance_from_airport,
+        healthy_options,
+        vegetarian_options,
+        vegan_options,
+        gluten_free_options,
         rental_process_speed,
         vehicle_condition,
         upsell_pressure,
@@ -140,6 +153,10 @@ export async function POST(request: Request) {
         ${body.restaurantWifiAvailable || null},
         ${body.atmosphere || null},
         ${body.restaurantDistanceFromAirport || null},
+        ${body.healthyOptions || null},
+        ${body.vegetarianOptions || null},
+        ${body.veganOptions || null},
+        ${body.glutenFreeOptions || null},
         ${body.rentalProcessSpeed || null},
         ${body.vehicleCondition || null},
         ${body.upsellPressure || null},
