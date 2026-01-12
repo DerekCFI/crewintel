@@ -45,6 +45,7 @@ export default function AddLocationPage() {
     fitnessCenter: false,
     shuttleService: false,
     distanceFromAirport: '',
+    roomLocationRecommendation: '',
     distanceToRestaurants: '',
     inRoomCoffee: '',
     inRoomMicrowave: false,
@@ -148,6 +149,7 @@ export default function AddLocationPage() {
         fitnessCenter: false,
         shuttleService: false,
         distanceFromAirport: '',
+        roomLocationRecommendation: '',
         distanceToRestaurants: '',
         inRoomCoffee: '',
         inRoomMicrowave: false,
@@ -396,6 +398,21 @@ export default function AddLocationPage() {
                 </div>
 
                 <div>
+                  <label htmlFor="roomLocationRecommendation" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Room Location Recommendation
+                  </label>
+                  <textarea
+                    id="roomLocationRecommendation"
+                    name="roomLocationRecommendation"
+                    rows={3}
+                    placeholder="e.g., Upper floors quieter, avoid rooms near elevator, request courtyard view"
+                    value={formData.roomLocationRecommendation}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  />
+                </div>
+
+                <div>
                   <label htmlFor="distanceToRestaurants" className="block text-sm font-semibold text-gray-700 mb-2">
                     Distance to Restaurants
                   </label>
@@ -469,6 +486,7 @@ export default function AddLocationPage() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
                     <option value="">Select responsiveness</option>
+                    <option value="na">N/A</option>
                     <option value="unresponsive">Unresponsive</option>
                     <option value="slow">Slow</option>
                     <option value="adequate">Adequate</option>

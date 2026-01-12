@@ -4,7 +4,8 @@ import { neon } from '@neondatabase/serverless'
 /*
  * Database Schema Updates:
  *
- * -- Universal field
+ * -- Universal fields
+ * ALTER TABLE reviews ADD COLUMN phone VARCHAR(50);
  * ALTER TABLE reviews ADD COLUMN would_recommend BOOLEAN;
  *
  * -- Hotel fields
@@ -13,6 +14,7 @@ import { neon } from '@neondatabase/serverless'
  * ALTER TABLE reviews DROP COLUMN breakfast_quality;
  * ALTER TABLE reviews ADD COLUMN breakfast VARCHAR(50);
  * ALTER TABLE reviews ADD COLUMN breakfast_start_time VARCHAR(100);
+ * ALTER TABLE reviews ADD COLUMN room_location_recommendation TEXT;
  * ALTER TABLE reviews ADD COLUMN distance_to_restaurants VARCHAR(50);
  * ALTER TABLE reviews ADD COLUMN dry_cleaning_available BOOLEAN;
  * ALTER TABLE reviews ADD COLUMN in_room_coffee VARCHAR(50);
@@ -81,6 +83,7 @@ export async function POST(request: Request) {
         fitness_center,
         shuttle_service,
         distance_from_airport,
+        room_location_recommendation,
         distance_to_restaurants,
         in_room_coffee,
         in_room_microwave,
@@ -155,6 +158,7 @@ export async function POST(request: Request) {
         ${body.fitnessCenter || null},
         ${body.shuttleService || null},
         ${body.distanceFromAirport || null},
+        ${body.roomLocationRecommendation || null},
         ${body.distanceToRestaurants || null},
         ${body.inRoomCoffee || null},
         ${body.inRoomMicrowave || null},
