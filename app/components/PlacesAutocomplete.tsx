@@ -24,6 +24,11 @@ export default function PlacesAutocomplete({ onPlaceSelect, value, category }: P
   const [inputValue, setInputValue] = useState(value)
   const [error, setError] = useState<string>('')
 
+  // Sync with external value changes (e.g., form reset)
+  useEffect(() => {
+    setInputValue(value)
+  }, [value])
+
   // Debounce search
   useEffect(() => {
     if (!inputValue || inputValue.length < 3) {

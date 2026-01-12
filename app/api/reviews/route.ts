@@ -2,8 +2,23 @@ import { NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
 
 /*
- * Database Schema for Restaurant Fields:
+ * Database Schema Updates:
  *
+ * -- Universal field
+ * ALTER TABLE reviews ADD COLUMN would_recommend BOOLEAN;
+ *
+ * -- Hotel fields
+ * ALTER TABLE reviews ADD COLUMN room_temperature_control VARCHAR(50);
+ * ALTER TABLE reviews DROP COLUMN breakfast_available;
+ * ALTER TABLE reviews DROP COLUMN breakfast_quality;
+ * ALTER TABLE reviews ADD COLUMN breakfast VARCHAR(50);
+ * ALTER TABLE reviews ADD COLUMN breakfast_start_time VARCHAR(100);
+ * ALTER TABLE reviews ADD COLUMN distance_to_restaurants VARCHAR(50);
+ * ALTER TABLE reviews ADD COLUMN dry_cleaning_available BOOLEAN;
+ * ALTER TABLE reviews ADD COLUMN in_room_coffee VARCHAR(50);
+ * ALTER TABLE reviews ADD COLUMN in_room_microwave BOOLEAN;
+ *
+ * -- Restaurant fields
  * ALTER TABLE reviews ADD COLUMN healthy_options BOOLEAN;
  * ALTER TABLE reviews ADD COLUMN vegetarian_options BOOLEAN;
  * ALTER TABLE reviews ADD COLUMN vegan_options BOOLEAN;
@@ -39,11 +54,13 @@ export async function POST(request: Request) {
         airport_code,
         location_name,
         address,
+        phone,
         latitude,
         longitude,
         overall_rating,
         review_text,
         visit_date,
+        would_recommend,
         aircraft_type,
         bed_quality,
         noise_level,
@@ -54,14 +71,19 @@ export async function POST(request: Request) {
         staff_responsiveness,
         wifi_quality,
         shower_quality,
+        room_temperature_control,
         parking_situation,
-        breakfast_available,
-        breakfast_quality,
+        breakfast,
+        breakfast_start_time,
         crew_recognition,
         laundry_available,
+        dry_cleaning_available,
         fitness_center,
         shuttle_service,
         distance_from_airport,
+        distance_to_restaurants,
+        in_room_coffee,
+        in_room_microwave,
         service_speed,
         fuel_pricing,
         crew_lounge_quality,
@@ -106,11 +128,13 @@ export async function POST(request: Request) {
         ${body.airport.toUpperCase()},
         ${body.locationName},
         ${body.address},
+        ${body.phone || null},
         ${body.latitude || null},
         ${body.longitude || null},
         ${body.overallRating},
         ${body.reviewText},
         ${body.visitDate || null},
+        ${body.wouldRecommend || null},
         ${body.aircraftType || null},
         ${body.bedQuality || null},
         ${body.noiseLevel || null},
@@ -121,14 +145,19 @@ export async function POST(request: Request) {
         ${body.staffResponsiveness || null},
         ${body.wifiQuality || null},
         ${body.showerQuality || null},
+        ${body.roomTemperatureControl || null},
         ${body.parkingSituation || null},
-        ${body.breakfastAvailable || null},
-        ${body.breakfastQuality || null},
+        ${body.breakfast || null},
+        ${body.breakfastStartTime || null},
         ${body.crewRecognition || null},
         ${body.laundryAvailable || null},
+        ${body.dryCleaningAvailable || null},
         ${body.fitnessCenter || null},
         ${body.shuttleService || null},
         ${body.distanceFromAirport || null},
+        ${body.distanceToRestaurants || null},
+        ${body.inRoomCoffee || null},
+        ${body.inRoomMicrowave || null},
         ${body.serviceSpeed || null},
         ${body.fuelPricing || null},
         ${body.crewLoungeQuality || null},

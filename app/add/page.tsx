@@ -20,6 +20,7 @@ export default function AddLocationPage() {
     overallRating: 0,
     reviewText: '',
     visitDate: '',
+    wouldRecommend: false,
 
     // Aircraft type (FBOs)
     aircraftType: '',
@@ -34,14 +35,19 @@ export default function AddLocationPage() {
     staffResponsiveness: '',
     wifiQuality: 0,
     showerQuality: 0,
+    roomTemperatureControl: '',
     parkingSituation: '',
-    breakfastAvailable: false,
-    breakfastQuality: 0,
+    breakfast: '',
+    breakfastStartTime: '',
     crewRecognition: false,
     laundryAvailable: '',
+    dryCleaningAvailable: false,
     fitnessCenter: false,
     shuttleService: false,
     distanceFromAirport: '',
+    distanceToRestaurants: '',
+    inRoomCoffee: '',
+    inRoomMicrowave: false,
 
     // FBO fields
     serviceSpeed: 0,
@@ -102,19 +108,22 @@ export default function AddLocationPage() {
 
     // Only reset if category actually changed
     if (prevCategoryRef.current !== formData.category && prevCategoryRef.current !== '') {
-      // Reset all category-specific fields to default values
+      // Reset all fields except category and airport
       setFormData(prev => ({
-        // Preserve these universal fields
+        // Preserve only these fields
         category: prev.category,
         airport: prev.airport,
-        locationName: prev.locationName,
-        address: prev.address,
-        phone: prev.phone,
-        latitude: prev.latitude,
-        longitude: prev.longitude,
-        visitDate: prev.visitDate,
-        overallRating: prev.overallRating,
-        reviewText: prev.reviewText,
+
+        // Reset universal fields
+        locationName: '',
+        address: '',
+        phone: '',
+        latitude: undefined,
+        longitude: undefined,
+        visitDate: '',
+        overallRating: 0,
+        reviewText: '',
+        wouldRecommend: false,
 
         // Reset aircraft type (FBO field)
         aircraftType: '',
@@ -129,14 +138,19 @@ export default function AddLocationPage() {
         staffResponsiveness: '',
         wifiQuality: 0,
         showerQuality: 0,
+        roomTemperatureControl: '',
         parkingSituation: '',
-        breakfastAvailable: false,
-        breakfastQuality: 0,
+        breakfast: '',
+        breakfastStartTime: '',
         crewRecognition: false,
         laundryAvailable: '',
+        dryCleaningAvailable: false,
         fitnessCenter: false,
         shuttleService: false,
         distanceFromAirport: '',
+        distanceToRestaurants: '',
+        inRoomCoffee: '',
+        inRoomMicrowave: false,
 
         // Reset all FBO fields to defaults
         serviceSpeed: 0,
@@ -339,6 +353,21 @@ export default function AddLocationPage() {
               required={true}
             />
 
+            {/* Would Recommend */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="wouldRecommend"
+                name="wouldRecommend"
+                checked={formData.wouldRecommend}
+                onChange={handleChange}
+                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label htmlFor="wouldRecommend" className="ml-3 text-sm font-semibold text-gray-700">
+                Would Recommend
+              </label>
+            </div>
+
             <hr className="my-8 border-gray-200" />
 
             {/* HOTEL-SPECIFIC FIELDS */}
@@ -363,6 +392,24 @@ export default function AddLocationPage() {
                     <option value="under-5">Under 5 Minutes</option>
                     <option value="5-15">5-15 Minutes</option>
                     <option value="over-15">Over 15 Minutes</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="distanceToRestaurants" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Distance to Restaurants
+                  </label>
+                  <select
+                    id="distanceToRestaurants"
+                    name="distanceToRestaurants"
+                    value={formData.distanceToRestaurants}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  >
+                    <option value="">Select distance</option>
+                    <option value="walking">Walking Distance</option>
+                    <option value="5-15">5-15 Minute Drive</option>
+                    <option value="over-15">Over 15 Minute Drive</option>
                   </select>
                 </div>
 
@@ -411,7 +458,7 @@ export default function AddLocationPage() {
 
                 <div>
                   <label htmlFor="staffResponsiveness" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Staff Responsiveness *
+                    Staff Responsiveness (to noise complaints/requests) *
                   </label>
                   <select
                     id="staffResponsiveness"
@@ -510,6 +557,25 @@ export default function AddLocationPage() {
                   required={true}
                 />
 
+                <div>
+                  <label htmlFor="roomTemperatureControl" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Room Temperature Control
+                  </label>
+                  <select
+                    id="roomTemperatureControl"
+                    name="roomTemperatureControl"
+                    value={formData.roomTemperatureControl}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  >
+                    <option value="">Select quality</option>
+                    <option value="poor">Poor</option>
+                    <option value="fair">Fair</option>
+                    <option value="good">Good</option>
+                    <option value="excellent">Excellent</option>
+                  </select>
+                </div>
+
                 <StarRating
                   value={formData.wifiQuality}
                   onChange={(value) => setFormData(prev => ({ ...prev, wifiQuality: value }))}
@@ -517,32 +583,45 @@ export default function AddLocationPage() {
                   required={true}
                 />
 
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="breakfastAvailable"
-                    name="breakfastAvailable"
-                    checked={formData.breakfastAvailable}
-                    onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="breakfastAvailable" className="ml-3 text-sm font-semibold text-gray-700">
-                    Breakfast Available
+                <div>
+                  <label htmlFor="breakfast" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Breakfast
                   </label>
+                  <select
+                    id="breakfast"
+                    name="breakfast"
+                    value={formData.breakfast}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  >
+                    <option value="">Select option</option>
+                    <option value="not-available">Not Available</option>
+                    <option value="included">Included in Rate</option>
+                    <option value="purchase">Available for Purchase</option>
+                    <option value="complimentary-continental">Complimentary Continental</option>
+                  </select>
                 </div>
 
-                {formData.breakfastAvailable && (
-                  <StarRating
-                    value={formData.breakfastQuality}
-                    onChange={(value) => setFormData(prev => ({ ...prev, breakfastQuality: value }))}
-                    label="Breakfast Quality"
-                    required={true}
-                  />
+                {formData.breakfast && formData.breakfast !== 'not-available' && (
+                  <div>
+                    <label htmlFor="breakfastStartTime" className="block text-sm font-semibold text-gray-700 mb-2">
+                      Breakfast Start Time
+                    </label>
+                    <input
+                      type="text"
+                      id="breakfastStartTime"
+                      name="breakfastStartTime"
+                      placeholder="e.g., Weekday: 6am, Weekend: 7am"
+                      value={formData.breakfastStartTime}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    />
+                  </div>
                 )}
 
                 <div>
                   <label htmlFor="laundryAvailable" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Laundry Available *
+                    Self-Service Laundry Available *
                   </label>
                   <select
                     id="laundryAvailable"
@@ -564,6 +643,20 @@ export default function AddLocationPage() {
                 <div className="flex items-center">
                   <input
                     type="checkbox"
+                    id="dryCleaningAvailable"
+                    name="dryCleaningAvailable"
+                    checked={formData.dryCleaningAvailable}
+                    onChange={handleChange}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="dryCleaningAvailable" className="ml-3 text-sm font-semibold text-gray-700">
+                    Dry-Cleaning Available
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
                     id="fitnessCenter"
                     name="fitnessCenter"
                     checked={formData.fitnessCenter}
@@ -572,6 +665,38 @@ export default function AddLocationPage() {
                   />
                   <label htmlFor="fitnessCenter" className="ml-3 text-sm font-semibold text-gray-700">
                     Fitness Center Available
+                  </label>
+                </div>
+
+                <div>
+                  <label htmlFor="inRoomCoffee" className="block text-sm font-semibold text-gray-700 mb-2">
+                    In-Room Coffee
+                  </label>
+                  <select
+                    id="inRoomCoffee"
+                    name="inRoomCoffee"
+                    value={formData.inRoomCoffee}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  >
+                    <option value="">Select option</option>
+                    <option value="single-cup">Single-Cup Machine</option>
+                    <option value="multi-cup">Multi-Cup Machine</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="inRoomMicrowave"
+                    name="inRoomMicrowave"
+                    checked={formData.inRoomMicrowave}
+                    onChange={handleChange}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="inRoomMicrowave" className="ml-3 text-sm font-semibold text-gray-700">
+                    In-Room Microwave
                   </label>
                 </div>
               </>
