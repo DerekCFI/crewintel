@@ -144,11 +144,20 @@ export default function HotelsPage() {
                   </div>
                 )}
 
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>Latest review: {new Date(business.latest_review_date).toLocaleDateString()}</span>
+                <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/add?category=hotels&name=${encodeURIComponent(business.location_name)}&address=${encodeURIComponent(business.address)}`}
+                      className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                    >
+                      Review This Hotel
+                    </Link>
+                    <span className="text-gray-300">•</span>
+                    <span className="text-sm text-gray-500">Latest review: {new Date(business.latest_review_date).toLocaleDateString()}</span>
+                  </div>
                   <Link
                     href={`/hotels/${business.business_slug}`}
-                    className="text-blue-600 hover:text-blue-800 font-semibold"
+                    className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
                   >
                     View All Reviews →
                   </Link>

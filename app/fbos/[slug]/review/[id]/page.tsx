@@ -18,31 +18,23 @@ interface Review {
   visit_date: string
   would_recommend: boolean
   created_at: string
-  
-  // Hotel-specific fields
-  bed_quality: number
-  noise_level: string
-  blackout_curtains: boolean
-  blackout_effectiveness: number
-  room_cleanliness: number
-  checkin_experience: number
-  staff_responsiveness: string
-  wifi_quality: number
-  shower_quality: number
-  room_temperature_control: string
-  parking_situation: string
-  breakfast: string
-  breakfast_start_time: string
-  crew_recognition: boolean
-  laundry_available: string
-  dry_cleaning_available: boolean
-  fitness_center: boolean
-  shuttle_service: boolean
-  distance_from_airport: string
-  room_location_recommendation: string
-  distance_to_restaurants: string
-  in_room_coffee: string
-  in_room_microwave: boolean
+
+  // FBO-specific fields
+  service_speed: number
+  fuel_pricing: string
+  crew_lounge_quality: number
+  crew_car_availability: string
+  staff_attitude: number
+  passenger_crew_focus: string
+  parking_ramp_space: string
+  twentyfour_seven_service: boolean
+  late_night_service_speed: string
+  fbo_amenities_quality: number
+  communication: number
+  hangar_availability: string
+  catering_available: boolean
+  bathroom_quality: number
+  fbo_wifi_quality: number
 }
 
 export default function HotelDetailPage() {
@@ -96,36 +88,6 @@ export default function HotelDetailPage() {
 
   const formatLabel = (value: string) => {
     return value.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-  }
-
-  const formatBreakfast = (value: string) => {
-    const breakfastLabels: { [key: string]: string } = {
-      'included': 'Breakfast: Included in room rate',
-      'purchase': 'Breakfast: Available for purchase',
-      'complimentary-continental': 'Breakfast: Complimentary continental',
-      'not-available': 'Breakfast: Not available'
-    }
-    return breakfastLabels[value] || `Breakfast: ${formatLabel(value)}`
-  }
-
-  const formatLaundry = (value: string) => {
-    const laundryLabels: { [key: string]: string } = {
-      'in-room': 'Self-Service Laundry: In-Room',
-      'free-on-site': 'Self-Service Laundry: Free On-Site',
-      'paid-on-site': 'Self-Service Laundry: Paid On-Site',
-      'nearby': 'Self-Service Laundry: Nearby',
-      'none': 'Self-Service Laundry: Not available'
-    }
-    return laundryLabels[value] || `Self-Service Laundry: ${formatLabel(value)}`
-  }
-
-  const formatCoffee = (value: string) => {
-    const coffeeLabels: { [key: string]: string } = {
-      'single-cup': 'In-Room Coffee: Single-cup machine (Keurig-style)',
-      'multi-cup': 'In-Room Coffee: Multi-cup machine (standard coffee maker)',
-      'none': 'In-Room Coffee: Not available'
-    }
-    return coffeeLabels[value] || `In-Room Coffee: ${formatLabel(value)}`
   }
 
   if (isLoading) {
@@ -204,101 +166,109 @@ export default function HotelDetailPage() {
         {/* Detailed Ratings */}
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Detailed Ratings</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Bed Quality */}
-            {review.bed_quality > 0 && (
+            {/* Service Speed */}
+            {review.service_speed > 0 && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Bed/Sleep Quality</p>
-                {renderStars(review.bed_quality)}
+                <p className="text-sm font-semibold text-gray-700 mb-2">Service Speed</p>
+                {renderStars(review.service_speed)}
               </div>
             )}
 
-            {/* Room Cleanliness */}
-            {review.room_cleanliness > 0 && (
+            {/* Crew Lounge Quality */}
+            {review.crew_lounge_quality > 0 && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Room Cleanliness</p>
-                {renderStars(review.room_cleanliness)}
+                <p className="text-sm font-semibold text-gray-700 mb-2">Crew Lounge Quality</p>
+                {renderStars(review.crew_lounge_quality)}
               </div>
             )}
 
-            {/* Check-in Experience */}
-            {review.checkin_experience > 0 && (
+            {/* Staff Attitude */}
+            {review.staff_attitude > 0 && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Check-In Experience</p>
-                {renderStars(review.checkin_experience)}
+                <p className="text-sm font-semibold text-gray-700 mb-2">Staff Attitude</p>
+                {renderStars(review.staff_attitude)}
+              </div>
+            )}
+
+            {/* FBO Amenities Quality */}
+            {review.fbo_amenities_quality > 0 && (
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-2">FBO Amenities Quality</p>
+                {renderStars(review.fbo_amenities_quality)}
+              </div>
+            )}
+
+            {/* Communication */}
+            {review.communication > 0 && (
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-2">Communication</p>
+                {renderStars(review.communication)}
+              </div>
+            )}
+
+            {/* Bathroom Quality */}
+            {review.bathroom_quality > 0 && (
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-2">Bathroom Quality</p>
+                {renderStars(review.bathroom_quality)}
               </div>
             )}
 
             {/* Wi-Fi Quality */}
-            {review.wifi_quality > 0 && (
+            {review.fbo_wifi_quality > 0 && (
               <div>
                 <p className="text-sm font-semibold text-gray-700 mb-2">Wi-Fi Quality</p>
-                {renderStars(review.wifi_quality)}
+                {renderStars(review.fbo_wifi_quality)}
               </div>
             )}
 
-            {/* Shower Quality */}
-            {review.shower_quality > 0 && (
+            {/* Fuel Pricing */}
+            {review.fuel_pricing && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Shower Quality</p>
-                {renderStars(review.shower_quality)}
+                <p className="text-sm font-semibold text-gray-700 mb-2">Fuel Pricing</p>
+                <p className="text-gray-600">{formatLabel(review.fuel_pricing)}</p>
               </div>
             )}
 
-            {/* Blackout Effectiveness */}
-            {review.blackout_curtains && review.blackout_effectiveness > 0 && (
+            {/* Crew Car Availability */}
+            {review.crew_car_availability && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Blackout Curtain Effectiveness</p>
-                {renderStars(review.blackout_effectiveness)}
+                <p className="text-sm font-semibold text-gray-700 mb-2">Crew Car Availability</p>
+                <p className="text-gray-600">{formatLabel(review.crew_car_availability)}</p>
               </div>
             )}
 
-            {/* Noise Level */}
-            {review.noise_level && (
+            {/* Passenger vs Crew Focus */}
+            {review.passenger_crew_focus && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Noise Level</p>
-                <p className="text-gray-600">{formatLabel(review.noise_level)}</p>
+                <p className="text-sm font-semibold text-gray-700 mb-2">Passenger vs Crew Focus</p>
+                <p className="text-gray-600">{formatLabel(review.passenger_crew_focus)}</p>
               </div>
             )}
 
-            {/* Room Temperature Control */}
-            {review.room_temperature_control && (
+            {/* Parking/Ramp Space */}
+            {review.parking_ramp_space && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Room Temperature Control</p>
-                <p className="text-gray-600">{formatLabel(review.room_temperature_control)}</p>
+                <p className="text-sm font-semibold text-gray-700 mb-2">Parking/Ramp Space</p>
+                <p className="text-gray-600">{formatLabel(review.parking_ramp_space)}</p>
               </div>
             )}
 
-            {/* Staff Responsiveness */}
-            {review.staff_responsiveness && (
+            {/* Late-Night Service Speed */}
+            {review.late_night_service_speed && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Staff Responsiveness</p>
-                <p className="text-gray-600">{formatLabel(review.staff_responsiveness)}</p>
+                <p className="text-sm font-semibold text-gray-700 mb-2">Late-Night Service Speed</p>
+                <p className="text-gray-600">{formatLabel(review.late_night_service_speed)}</p>
               </div>
             )}
 
-            {/* Parking */}
-            {review.parking_situation && (
+            {/* Hangar Availability */}
+            {review.hangar_availability && (
               <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Parking Situation</p>
-                <p className="text-gray-600">{formatLabel(review.parking_situation)}</p>
-              </div>
-            )}
-
-            {/* Distance from Airport */}
-            {review.distance_from_airport && (
-              <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Distance from Airport</p>
-                <p className="text-gray-600">{formatLabel(review.distance_from_airport)}</p>
-              </div>
-            )}
-
-            {/* Distance to Restaurants */}
-            {review.distance_to_restaurants && (
-              <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">Distance to Restaurants</p>
-                <p className="text-gray-600">{formatLabel(review.distance_to_restaurants)}</p>
+                <p className="text-sm font-semibold text-gray-700 mb-2">Hangar Availability</p>
+                <p className="text-gray-600">{formatLabel(review.hangar_availability)}</p>
               </div>
             )}
           </div>
@@ -306,123 +276,26 @@ export default function HotelDetailPage() {
 
         {/* Amenities & Services */}
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Amenities & Services</h2>
-          
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Services & Amenities</h2>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Breakfast */}
-            {review.breakfast && review.breakfast !== 'not-available' && (
+            {/* 24/7 Service */}
+            {review.twentyfour_seven_service && (
               <div className="flex items-start gap-3">
                 <span className="text-green-600 text-xl">✓</span>
-                <div>
-                  <p className="font-semibold text-gray-700">Breakfast</p>
-                  <p className="text-sm">
-                    <span className="italic text-gray-600">
-                      {review.breakfast === 'included' && 'Included in room rate'}
-                      {review.breakfast === 'purchase' && 'Available for purchase'}
-                      {review.breakfast === 'complimentary-continental' && 'Complimentary continental'}
-                      {!['included', 'purchase', 'complimentary-continental'].includes(review.breakfast) && formatLabel(review.breakfast)}
-                    </span>
-                  </p>
-                  {review.breakfast_start_time && (
-                    <p className="text-sm text-gray-500 mt-1">Start Time: {review.breakfast_start_time}</p>
-                  )}
-                </div>
+                <p className="font-semibold text-gray-700">24/7 Service Available</p>
               </div>
             )}
 
-            {/* In-Room Coffee */}
-            {review.in_room_coffee && review.in_room_coffee !== 'none' && (
+            {/* Catering Available */}
+            {review.catering_available && (
               <div className="flex items-start gap-3">
                 <span className="text-green-600 text-xl">✓</span>
-                <div>
-                  <p className="font-semibold text-gray-700">In-Room Coffee</p>
-                  <p className="text-sm">
-                    <span className="italic text-gray-600">
-                      {review.in_room_coffee === 'single-cup' && 'Single-cup machine (Keurig-style)'}
-                      {review.in_room_coffee === 'multi-cup' && 'Multi-cup machine (standard coffee maker)'}
-                      {!['single-cup', 'multi-cup'].includes(review.in_room_coffee) && formatLabel(review.in_room_coffee)}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* In-Room Microwave */}
-            {review.in_room_microwave && (
-              <div className="flex items-start gap-3">
-                <span className="text-green-600 text-xl">✓</span>
-                <p className="font-semibold text-gray-700">In-Room Microwave</p>
-              </div>
-            )}
-
-            {/* Laundry */}
-            {review.laundry_available && review.laundry_available !== 'none' && (
-              <div className="flex items-start gap-3">
-                <span className="text-green-600 text-xl">✓</span>
-                <div>
-                  <p className="font-semibold text-gray-700">Self-Service Laundry</p>
-                  <p className="text-sm">
-                    <span className="italic text-gray-600">
-                      {review.laundry_available === 'in-room' && 'In-Room'}
-                      {review.laundry_available === 'free-on-site' && 'Free On-Site'}
-                      {review.laundry_available === 'paid-on-site' && 'Paid On-Site'}
-                      {review.laundry_available === 'nearby' && 'Nearby'}
-                      {!['in-room', 'free-on-site', 'paid-on-site', 'nearby'].includes(review.laundry_available) && formatLabel(review.laundry_available)}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Dry Cleaning */}
-            {review.dry_cleaning_available && (
-              <div className="flex items-start gap-3">
-                <span className="text-green-600 text-xl">✓</span>
-                <p className="font-semibold text-gray-700">Dry Cleaning Available</p>
-              </div>
-            )}
-
-            {/* Fitness Center */}
-            {review.fitness_center && (
-              <div className="flex items-start gap-3">
-                <span className="text-green-600 text-xl">✓</span>
-                <p className="font-semibold text-gray-700">Fitness Center</p>
-              </div>
-            )}
-
-            {/* Shuttle Service */}
-            {review.shuttle_service && (
-              <div className="flex items-start gap-3">
-                <span className="text-green-600 text-xl">✓</span>
-                <p className="font-semibold text-gray-700">Shuttle Service</p>
-              </div>
-            )}
-
-            {/* Crew Recognition */}
-            {review.crew_recognition && (
-              <div className="flex items-start gap-3">
-                <span className="text-green-600 text-xl">✓</span>
-                <p className="font-semibold text-gray-700">Crew Recognition/Rates</p>
-              </div>
-            )}
-
-            {/* Blackout Curtains */}
-            {review.blackout_curtains && (
-              <div className="flex items-start gap-3">
-                <span className="text-green-600 text-xl">✓</span>
-                <p className="font-semibold text-gray-700">Blackout Curtains</p>
+                <p className="font-semibold text-gray-700">Catering Available</p>
               </div>
             )}
           </div>
         </div>
-
-        {/* Room Tips */}
-        {review.room_location_recommendation && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">💡 Room Location Tips</h3>
-            <p className="text-gray-700">{review.room_location_recommendation}</p>
-          </div>
-        )}
       </div>
     </div>
   )
