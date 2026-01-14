@@ -15,6 +15,9 @@ interface Business {
   avg_rating: number
   latest_review_date: string
   has_recommendations: boolean
+  after_hours_pct: number
+  fbo_delivery_pct: number
+  crew_rates_pct: number
   recent_reviews: Array<{
     id: number
     review_text: string
@@ -49,6 +52,26 @@ export default function RentalsPage() {
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(prev => ({ ...prev, ...newFilters }))
+  }
+
+  const renderAmenityTags = (business: Business) => {
+    const tags = []
+
+    // Only show tag if 50% or more reviews mention it
+    if (business.after_hours_pct >= 50) tags.push({ label: 'After-Hours Access', icon: '🌙' })
+    if (business.fbo_delivery_pct >= 50) tags.push({ label: 'FBO Delivery', icon: '✈️' })
+    if (business.crew_rates_pct >= 50) tags.push({ label: 'Crew Rates', icon: '✓' })
+
+    return (
+      <div className="flex flex-wrap gap-2 mt-3 mb-3">
+        {tags.map(tag => (
+          <span key={tag.label} className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+            <span>{tag.icon}</span>
+            {tag.label}
+          </span>
+        ))}
+      </div>
+    )
   }
 
   if (isLoading) {
@@ -126,6 +149,8 @@ export default function RentalsPage() {
                   </div>
                 </div>
 
+                {renderAmenityTags(business)}
+
                 {business.recent_reviews && business.recent_reviews.length > 0 && (
                   <div className="mb-4 space-y-3">
                     {business.recent_reviews.slice(0, 2).map((review) => (
@@ -140,11 +165,22 @@ export default function RentalsPage() {
                   </div>
                 )}
 
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>Latest review: {new Date(business.latest_review_date).toLocaleDateString()}</span>
+                <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/add?category=rentals&name=${encodeURIComponent(business.location_name)}&address=${encodeURIComponent(business.address)}`}
+                      className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                    >
+                      Review This Rental
+                    </Link>
+                    <span className="text-gray-300">•</span>
+                    <span className="text-sm text-gray-500">Latest review: {new Date(business.latest_review_date).toLocaleDateString()}</span>
+                    <span className="text-gray-300">•</span>
+                    <p className="text-xs text-gray-500">Amenities reported by crews</p>
+                  </div>
                   <Link
                     href={`/rentals/${business.business_slug}`}
-                    className="text-blue-600 hover:text-blue-800 font-semibold"
+                    className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
                   >
                     View All Reviews →
                   </Link>
