@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
 import StarRating from '../components/StarRating'
 import PriceRating from '../components/PriceRating'
 import PlacesAutocomplete from '../components/PlacesAutocomplete'
@@ -9,6 +10,7 @@ import PlacesAutocomplete from '../components/PlacesAutocomplete'
 function AddLocationForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { user } = useUser()
   const [formData, setFormData] = useState({
     // Universal fields
     category: '',
@@ -230,7 +232,11 @@ function AddLocationForm() {
       const response = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          userId: user?.id,
+          userEmail: user?.primaryEmailAddress?.emailAddress,
+        }),
       })
 
       if (response.ok) {

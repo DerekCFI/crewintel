@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
+import { calculateHotelRating, calculateFBORating, calculateRestaurantRating, calculateRentalRating } from '@/lib/ratings'
 
 /*
  * Database Schema Updates:
@@ -87,6 +88,23 @@ export async function POST(request: Request) {
       .replace(/-+/g, '-')           // Replace multiple hyphens with single
       .trim()
 
+    // Calculate detailed rating based on category
+    let calculatedRating = null;
+    switch (body.category) {
+      case 'hotels':
+        calculatedRating = calculateHotelRating(body);
+        break;
+      case 'fbos':
+        calculatedRating = calculateFBORating(body);
+        break;
+      case 'restaurants':
+        calculatedRating = calculateRestaurantRating(body);
+        break;
+      case 'rentals':
+        calculatedRating = calculateRentalRating(body);
+        break;
+    }
+
     // Insert the review with all fields
     const result = await sql`
       INSERT INTO reviews (
@@ -164,6 +182,9 @@ export async function POST(request: Request) {
         pricing_transparency,
         crew_rates_available,
         rental_location,
+        calculated_rating,
+        user_id,
+        user_email,
         created_at
       ) VALUES (
         ${body.category},
@@ -240,6 +261,9 @@ export async function POST(request: Request) {
         ${body.pricingTransparency || null},
         ${body.crewRatesAvailable || null},
         ${body.rentalLocation || null},
+        ${calculatedRating},
+        ${body.userId || null},
+        ${body.userEmail || null},
         NOW()
       )
       RETURNING id

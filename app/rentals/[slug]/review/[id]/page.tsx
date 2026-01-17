@@ -14,6 +14,7 @@ interface Review {
   latitude: number
   longitude: number
   overall_rating: number
+  calculated_rating: number | null
   review_text: string
   visit_date: string
   would_recommend: boolean
@@ -133,7 +134,17 @@ export default function HotelDetailPage() {
               <p className="text-blue-600 font-semibold">✈️ Airport: {review.airport_code}</p>
             </div>
             <div className="text-right">
-              {renderStars(review.overall_rating)}
+              <div className="mb-2">
+                <p className="text-xs text-gray-600 mb-1">Overall Rating</p>
+                {renderStars(review.overall_rating)}
+              </div>
+              {review.calculated_rating && Math.abs(review.overall_rating - review.calculated_rating) >= 0.3 && (
+                <div className="mt-3">
+                  <p className="text-xs text-gray-600 mb-1">Detailed Score</p>
+                  {renderStars(Math.round(review.calculated_rating))}
+                  <p className="text-xs text-gray-500 mt-1">{review.calculated_rating.toFixed(1)}★</p>
+                </div>
+              )}
               {review.would_recommend && (
                 <span className="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full mt-2 inline-block">
                   ✓ Would Recommend
