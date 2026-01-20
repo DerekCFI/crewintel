@@ -83,13 +83,14 @@ export async function GET(
 
     // Get all reviews for this business
     const reviews = await sql`
-      SELECT 
+      SELECT
         id,
         overall_rating,
         review_text,
         would_recommend,
         created_at,
-        visit_date
+        visit_date,
+        visit_date_end
       FROM reviews
       WHERE business_slug = ${slug}
       AND category = ${category}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import { formatVisitDateRange } from '../../lib/dateFormatting'
 
 interface Review {
   id: number
@@ -11,6 +12,7 @@ interface Review {
   would_recommend: boolean
   created_at: string
   visit_date: string
+  visit_date_end: string
 }
 
 interface Business {
@@ -185,7 +187,9 @@ export default function BusinessPage() {
 
               <div className="flex justify-between items-center text-sm text-gray-500">
                 <div>
-                  {review.visit_date && <span>Visited: {new Date(review.visit_date).toLocaleDateString()} • </span>}
+                  {formatVisitDateRange(review.visit_date, review.visit_date_end) && (
+                    <span>Visited: {formatVisitDateRange(review.visit_date, review.visit_date_end)} • </span>
+                  )}
                   <span>Reviewed: {new Date(review.created_at).toLocaleDateString()}</span>
                 </div>
                 <Link

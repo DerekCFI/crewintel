@@ -23,6 +23,7 @@ function AddLocationForm() {
     overallRating: 0,
     reviewText: '',
     visitDate: '',
+    visitDateEnd: '',
     wouldRecommend: false,
 
     // Aircraft type (FBOs)
@@ -99,6 +100,8 @@ function AddLocationForm() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
 
   // Track the previous category to detect changes
   const prevCategoryRef = useRef(formData.category)
@@ -125,6 +128,7 @@ function AddLocationForm() {
         latitude: undefined,
         longitude: undefined,
         visitDate: '',
+        visitDateEnd: '',
         overallRating: 0,
         reviewText: '',
         wouldRecommend: false,
@@ -226,6 +230,30 @@ function AddLocationForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError(null)
+    setSubmitSuccess(false)
+
+    // Client-side validation
+    if (!formData.category) {
+      setSubmitError('Please select a category')
+      return
+    }
+
+    if (!formData.locationName || formData.locationName.trim().length === 0) {
+      setSubmitError('Please enter a location name')
+      return
+    }
+
+    if (!formData.overallRating || formData.overallRating === 0) {
+      setSubmitError('Please select an overall rating')
+      return
+    }
+
+    if (!formData.reviewText || formData.reviewText.trim().length < 50) {
+      setSubmitError('Please write at least 50 characters in your review')
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
@@ -240,13 +268,28 @@ function AddLocationForm() {
       })
 
       if (response.ok) {
-        router.push(`/${formData.category}?success=true`)
+        setSubmitSuccess(true)
+        // Short delay to show success message before redirect
+        setTimeout(() => {
+          router.push(`/${formData.category}?success=true`)
+        }, 1000)
       } else {
-        alert('Failed to submit review. Please try again.')
+        // Try to get error details from response
+        let errorMessage = 'Failed to submit review. Please try again.'
+        try {
+          const errorData = await response.json()
+          if (errorData.error) {
+            errorMessage = errorData.error
+          }
+        } catch {
+          // If JSON parsing fails, use default message
+        }
+        console.error('Server error:', response.status, errorMessage)
+        setSubmitError(errorMessage)
       }
     } catch (error) {
       console.error('Error submitting review:', error)
-      alert('Error submitting review. Please try again.')
+      setSubmitError('Network error. Please check your connection and try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -338,20 +381,63 @@ function AddLocationForm() {
               </div>
             )}
 
-            {/* Visit Date */}
-            <div>
-              <label htmlFor="visitDate" className="block text-sm font-semibold text-gray-700 mb-2">
-                Date of Visit
-              </label>
-              <input
-                type="date"
-                id="visitDate"
-                name="visitDate"
-                value={formData.visitDate}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-              />
-            </div>
+            {/* Visit Date(s) */}
+            {formData.category === 'restaurants' ? (
+              // Restaurant: Single date input
+              <div>
+                <label htmlFor="visitDate" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Date of Visit
+                </label>
+                <input
+                  type="date"
+                  id="visitDate"
+                  name="visitDate"
+                  value={formData.visitDate}
+                  onChange={handleChange}
+                  className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                />
+              </div>
+            ) : (
+              // Hotels, FBOs, Car Rentals: Date range inputs
+              <div className="flex flex-wrap gap-4">
+                <div>
+                  <label htmlFor="visitDate" className="block text-sm font-semibold text-gray-700 mb-2">
+                    {formData.category === 'hotels' || formData.category === 'rentals' ? 'Check-in/Start Date' : 'Start Date'}
+                  </label>
+                  <input
+                    type="date"
+                    id="visitDate"
+                    name="visitDate"
+                    value={formData.visitDate}
+                    onChange={handleChange}
+                    className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="visitDateEnd" className="block text-sm font-semibold text-gray-700 mb-2">
+                    {formData.category === 'hotels' || formData.category === 'rentals' ? 'Check-out/End Date' : 'End Date'}
+                  </label>
+                  <input
+                    type="date"
+                    id="visitDateEnd"
+                    name="visitDateEnd"
+                    value={formData.visitDateEnd}
+                    onChange={(e) => {
+                      const endDate = e.target.value
+                      // Validate end date is not before start date
+                      if (formData.visitDate && endDate && endDate < formData.visitDate) {
+                        alert('End date cannot be before start date')
+                        return
+                      }
+                      handleChange(e)
+                    }}
+                    min={formData.visitDate || undefined}
+                    className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Optional</p>
+                </div>
+              </div>
+            )}
 
             {/* Aircraft Type (FBOs only) */}
             {formData.category === 'fbos' && (
@@ -1292,19 +1378,57 @@ function AddLocationForm() {
               </p>
             </div>
 
+            {/* Error Message */}
+            {submitError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <p className="font-medium">{submitError}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Success Message */}
+            {submitSuccess && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <p className="font-medium">Review submitted successfully!</p>
+                  <p className="text-sm">Redirecting you now...</p>
+                </div>
+              </div>
+            )}
+
             {/* Submit Buttons */}
             <div className="flex gap-4">
               <button
                 type="submit"
-                disabled={isSubmitting || formData.reviewText.length < 50 || !formData.category || !formData.locationName}
-                className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                disabled={isSubmitting || submitSuccess || formData.reviewText.length < 50 || !formData.category || !formData.locationName || !formData.overallRating}
+                className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >
-                {isSubmitting ? 'Submitting...' : 'Submit Review'}
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Submitting...
+                  </>
+                ) : submitSuccess ? (
+                  'Submitted!'
+                ) : (
+                  'Submit Review'
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                disabled={isSubmitting}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Cancel
               </button>

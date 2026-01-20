@@ -3,6 +3,7 @@ import { Work_Sans } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import FeedbackButton from './components/FeedbackButton'
 
 const workSans = Work_Sans({
   weight: ['400', '500', '600', '700'],
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
           </main>
 
           <Footer />
+          <FeedbackButton />
         </body>
       </html>
     </ClerkProvider>
