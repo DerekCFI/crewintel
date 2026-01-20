@@ -80,7 +80,7 @@ export async function POST(request: Request) {
           },
           body: JSON.stringify({
             from: 'CrewIntel Feedback <feedback@crewintel.org>',
-            to: 'derek@crewintel.org',
+            to: 'feedback@crewintel.org',
             subject: `[CrewIntel] New ${typeLabels[type] || type}: ${message.substring(0, 50)}...`,
             html: `
               <h2>New Feedback Received</h2>
