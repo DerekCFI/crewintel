@@ -14,6 +14,22 @@ const workSans = Work_Sans({
 export const metadata = {
   title: 'CrewIntel',
   description: 'Your crew\'s guide to the best travel services',
+  metadataBase: new URL('https://crewintel.net'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'CrewIntel',
+    description: 'Your crew\'s guide to the best travel services',
+    url: 'https://crewintel.net',
+    siteName: 'CrewIntel',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CrewIntel',
+    description: 'Your crew\'s guide to the best travel services',
+  },
 }
 
 export default function RootLayout({ children }) {
