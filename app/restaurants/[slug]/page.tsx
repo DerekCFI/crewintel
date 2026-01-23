@@ -13,6 +13,7 @@ interface Review {
   created_at: string
   visit_date: string
   visit_date_end: string
+  was_takeout_delivery: boolean
 }
 
 interface Business {
@@ -30,6 +31,9 @@ interface Business {
   vegetarian_pct: number
   vegan_pct: number
   takeout_pct: number
+  takeout_delivery_count: number
+  avg_atmosphere: number
+  atmosphere_count: number
 }
 
 export default function BusinessPage() {
@@ -176,11 +180,18 @@ export default function BusinessPage() {
                   {renderStars(review.overall_rating)}
                   <span className="font-semibold text-gray-900">{review.overall_rating}</span>
                 </div>
-                {review.would_recommend && (
-                  <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
-                    ✓ Recommended
-                  </span>
-                )}
+                <div className="flex gap-2">
+                  {review.was_takeout_delivery && (
+                    <span className="bg-orange-100 text-orange-800 text-xs font-semibold px-3 py-1 rounded-full">
+                      Takeout/Delivery
+                    </span>
+                  )}
+                  {review.would_recommend && (
+                    <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
+                      ✓ Recommended
+                    </span>
+                  )}
+                </div>
               </div>
 
               <p className="text-gray-700 mb-4">{review.review_text}</p>

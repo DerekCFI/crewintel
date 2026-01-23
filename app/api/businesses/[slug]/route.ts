@@ -27,9 +27,12 @@ export async function GET(
         , ROUND(AVG(CASE WHEN crew_recognition THEN 1.0 ELSE 0.0 END) * 100) as crew_rates_pct
         , ROUND(AVG(CASE WHEN shuttle_service THEN 1.0 ELSE 0.0 END) * 100) as shuttle_pct
         , ROUND(AVG(CASE WHEN fitness_center THEN 1.0 ELSE 0.0 END) * 100) as fitness_pct
-        , ROUND(AVG(CASE WHEN breakfast IS NOT NULL AND breakfast != 'not-available' THEN 1.0 ELSE 0.0 END) * 100) as breakfast_pct
-        , ROUND(AVG(CASE WHEN laundry_available IS NOT NULL AND laundry_available NOT IN ('none', '') THEN 1.0 ELSE 0.0 END) * 100) as laundry_pct
+        , ROUND(AVG(CASE WHEN breakfast IS NOT NULL AND breakfast NOT IN ('not-available', 'not-sure') THEN 1.0 ELSE 0.0 END) * 100) as breakfast_pct
+        , ROUND(AVG(CASE WHEN laundry_available IS NOT NULL AND laundry_available NOT IN ('none', '', 'not-sure') THEN 1.0 ELSE 0.0 END) * 100) as laundry_pct
         , ROUND(AVG(CASE WHEN blackout_curtains THEN 1.0 ELSE 0.0 END) * 100) as blackout_pct
+        , COUNT(CASE WHEN parking_situation IS NOT NULL AND parking_situation != 'not-sure' THEN 1 END) as parking_count
+        , COUNT(CASE WHEN laundry_available IS NOT NULL AND laundry_available != 'not-sure' THEN 1 END) as laundry_count
+        , COUNT(CASE WHEN breakfast IS NOT NULL AND breakfast != 'not-sure' THEN 1 END) as breakfast_count
       `
     } else if (category === 'fbos') {
       amenityFields = `
@@ -37,6 +40,14 @@ export async function GET(
         , ROUND(AVG(CASE WHEN catering_available THEN 1.0 ELSE 0.0 END) * 100) as catering_pct
         , ROUND(AVG(CASE WHEN hangar_availability IN ('yes-easy', 'yes-limited') THEN 1.0 ELSE 0.0 END) * 100) as hangar_pct
         , ROUND(AVG(CASE WHEN twentyfour_seven_service THEN 1.0 ELSE 0.0 END) * 100) as twentyfour_seven_pct
+        , ROUND(AVG(CASE WHEN crew_lounge_quality > 0 THEN crew_lounge_quality END)::numeric, 1) as avg_crew_lounge
+        , COUNT(CASE WHEN crew_lounge_quality > 0 THEN 1 END) as crew_lounge_count
+        , ROUND(AVG(CASE WHEN fbo_wifi_quality > 0 THEN fbo_wifi_quality END)::numeric, 1) as avg_wifi
+        , COUNT(CASE WHEN fbo_wifi_quality > 0 THEN 1 END) as wifi_count
+        , ROUND(AVG(CASE WHEN bathroom_quality > 0 THEN bathroom_quality END)::numeric, 1) as avg_bathroom
+        , COUNT(CASE WHEN bathroom_quality > 0 THEN 1 END) as bathroom_count
+        , ROUND(AVG(CASE WHEN fbo_amenities_quality > 0 THEN fbo_amenities_quality END)::numeric, 1) as avg_amenities
+        , COUNT(CASE WHEN fbo_amenities_quality > 0 THEN 1 END) as amenities_count
       `
     } else if (category === 'restaurants') {
       amenityFields = `
@@ -45,6 +56,17 @@ export async function GET(
         , ROUND(AVG(CASE WHEN vegetarian_options THEN 1.0 ELSE 0.0 END) * 100) as vegetarian_pct
         , ROUND(AVG(CASE WHEN vegan_options THEN 1.0 ELSE 0.0 END) * 100) as vegan_pct
         , ROUND(AVG(CASE WHEN takeout_quality > 0 THEN 1.0 ELSE 0.0 END) * 100) as takeout_pct
+        , COUNT(CASE WHEN was_takeout_delivery THEN 1 END) as takeout_delivery_count
+        , ROUND(AVG(CASE WHEN atmosphere IS NOT NULL AND NOT was_takeout_delivery THEN
+            CASE atmosphere
+              WHEN 'quiet' THEN 5
+              WHEN 'conversational' THEN 4
+              WHEN 'lively' THEN 3
+              WHEN 'loud' THEN 2
+              WHEN 'very-loud' THEN 1
+            END
+          END)::numeric, 1) as avg_atmosphere
+        , COUNT(CASE WHEN atmosphere IS NOT NULL AND NOT was_takeout_delivery THEN 1 END) as atmosphere_count
       `
     } else if (category === 'rentals') {
       amenityFields = `
@@ -90,7 +112,8 @@ export async function GET(
         would_recommend,
         created_at,
         visit_date,
-        visit_date_end
+        visit_date_end,
+        was_takeout_delivery
       FROM reviews
       WHERE business_slug = ${slug}
       AND category = ${category}

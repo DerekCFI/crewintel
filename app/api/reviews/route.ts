@@ -80,6 +80,12 @@ export async function POST(request: Request) {
 
     const sql = neon(process.env.DATABASE_URL!)
 
+    // Helper function to convert "not-sure" values to null
+    const nullIfNotSure = (value: string | null | undefined): string | null => {
+      if (!value || value === 'not-sure') return null
+      return value
+    }
+
     // Generate business slug from location name
     const businessSlug = body.locationName
       .toLowerCase()
@@ -173,6 +179,7 @@ export async function POST(request: Request) {
         vegetarian_options,
         vegan_options,
         gluten_free_options,
+        was_takeout_delivery,
         rental_process_speed,
         vehicle_condition,
         upsell_pressure,
@@ -212,11 +219,11 @@ export async function POST(request: Request) {
         ${body.wifiQuality || null},
         ${body.showerQuality || null},
         ${body.roomTemperatureControl || null},
-        ${body.parkingSituation || null},
-        ${body.breakfast || null},
+        ${nullIfNotSure(body.parkingSituation)},
+        ${nullIfNotSure(body.breakfast)},
         ${body.breakfastStartTime || null},
         ${body.crewRecognition || null},
-        ${body.laundryAvailable || null},
+        ${nullIfNotSure(body.laundryAvailable)},
         ${body.dryCleaningAvailable || null},
         ${body.fitnessCenter || null},
         ${body.shuttleService || null},
@@ -226,9 +233,9 @@ export async function POST(request: Request) {
         ${body.inRoomCoffee || null},
         ${body.inRoomMicrowave || null},
         ${body.serviceSpeed || null},
-        ${body.fuelPricing || null},
+        ${nullIfNotSure(body.fuelPricing)},
         ${body.crewLoungeQuality || null},
-        ${body.crewCarAvailability || null},
+        ${nullIfNotSure(body.crewCarAvailability)},
         ${body.staffAttitude || null},
         ${body.passengerCrewFocus || null},
         ${body.parkingRampSpace || null},
@@ -253,6 +260,7 @@ export async function POST(request: Request) {
         ${body.vegetarianOptions || null},
         ${body.veganOptions || null},
         ${body.glutenFreeOptions || null},
+        ${body.wasTakeoutDelivery || false},
         ${body.rentalProcessSpeed || null},
         ${body.vehicleCondition || null},
         ${body.upsellPressure || null},

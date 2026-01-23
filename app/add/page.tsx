@@ -85,6 +85,7 @@ function AddLocationForm() {
     vegetarianOptions: false,
     veganOptions: false,
     glutenFreeOptions: false,
+    wasTakeoutDelivery: false,
 
     // Car Rental fields
     rentalProcessSpeed: 0,
@@ -192,6 +193,7 @@ function AddLocationForm() {
         vegetarianOptions: false,
         veganOptions: false,
         glutenFreeOptions: false,
+        wasTakeoutDelivery: false,
 
         // Reset all car rental fields to defaults
         rentalProcessSpeed: 0,
@@ -556,17 +558,17 @@ function AddLocationForm() {
 
                 <div>
                   <label htmlFor="parkingSituation" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Parking Situation *
+                    Parking Situation
                   </label>
                   <select
                     id="parkingSituation"
                     name="parkingSituation"
-                    required
                     value={formData.parkingSituation}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
                     <option value="">Select parking situation</option>
+                    <option value="not-sure">Not Sure / Used Rideshare or Shuttle</option>
                     <option value="free-easy">Free & Easy</option>
                     <option value="free-tight">Free & Tight</option>
                     <option value="paid-self">Paid Self-Parking Only</option>
@@ -713,7 +715,7 @@ function AddLocationForm() {
 
                 <div>
                   <label htmlFor="breakfast" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Breakfast
+                    Breakfast Quality
                   </label>
                   <select
                     id="breakfast"
@@ -723,6 +725,7 @@ function AddLocationForm() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
                     <option value="">Select option</option>
+                    <option value="not-sure">Not Sure / Didn't Use</option>
                     <option value="not-available">Not Available</option>
                     <option value="included">Included in Rate</option>
                     <option value="purchase">Available for Purchase</option>
@@ -749,17 +752,17 @@ function AddLocationForm() {
 
                 <div>
                   <label htmlFor="laundryAvailable" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Self-Service Laundry Available *
+                    Self-Service Laundry Available
                   </label>
                   <select
                     id="laundryAvailable"
                     name="laundryAvailable"
-                    required
                     value={formData.laundryAvailable}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
                     <option value="">Select laundry option</option>
+                    <option value="not-sure">Not Sure</option>
                     <option value="in-room">In-Room</option>
                     <option value="free-onsite">Free On-Site</option>
                     <option value="paid-onsite">Paid On-Site</option>
@@ -912,17 +915,17 @@ function AddLocationForm() {
 
                 <div>
                   <label htmlFor="fuelPricing" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Fuel Pricing *
+                    Fuel Pricing
                   </label>
                   <select
                     id="fuelPricing"
                     name="fuelPricing"
-                    required
                     value={formData.fuelPricing}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
                     <option value="">Select fuel pricing</option>
+                    <option value="not-sure">Not Sure</option>
                     <option value="significantly-below">Significantly Below Average</option>
                     <option value="below">Below Average</option>
                     <option value="average">Average</option>
@@ -974,22 +977,23 @@ function AddLocationForm() {
                   value={formData.crewLoungeQuality}
                   onChange={(value) => setFormData(prev => ({ ...prev, crewLoungeQuality: value }))}
                   label="Crew Lounge Quality"
-                  required={true}
+                  required={false}
                 />
+                <p className="text-xs text-gray-500 -mt-4 mb-4">Leave unrated if you didn't use or not sure</p>
 
                 <div>
                   <label htmlFor="crewCarAvailability" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Crew Car Availability *
+                    Crew Car Availability
                   </label>
                   <select
                     id="crewCarAvailability"
                     name="crewCarAvailability"
-                    required
                     value={formData.crewCarAvailability}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
                     <option value="">Select availability</option>
+                    <option value="not-sure">Not Sure / Didn't Use</option>
                     <option value="always">Always Available</option>
                     <option value="usually">Usually Available</option>
                     <option value="limited">Limited</option>
@@ -1001,21 +1005,21 @@ function AddLocationForm() {
                   value={formData.bathroomQuality}
                   onChange={(value) => setFormData(prev => ({ ...prev, bathroomQuality: value }))}
                   label="Bathroom Quality"
-                  required={true}
+                  required={false}
                 />
 
                 <StarRating
                   value={formData.fboAmenitiesQuality}
                   onChange={(value) => setFormData(prev => ({ ...prev, fboAmenitiesQuality: value }))}
                   label="FBO Amenities Quality"
-                  required={true}
+                  required={false}
                 />
 
                 <StarRating
                   value={formData.fboWifiQuality}
                   onChange={(value) => setFormData(prev => ({ ...prev, fboWifiQuality: value }))}
                   label="Wi-Fi Quality"
-                  required={true}
+                  required={false}
                 />
 
                 <div className="flex items-center">
@@ -1120,26 +1124,57 @@ function AddLocationForm() {
                   label="Price Point"
                 />
 
-                <div>
-                  <label htmlFor="atmosphere" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Atmosphere *
-                  </label>
-                  <select
-                    id="atmosphere"
-                    name="atmosphere"
-                    required
-                    value={formData.atmosphere}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                  >
-                    <option value="">Select atmosphere</option>
-                    <option value="quiet">Quiet</option>
-                    <option value="conversational">Conversational</option>
-                    <option value="lively">Lively</option>
-                    <option value="loud">Loud</option>
-                    <option value="very-loud">Very Loud</option>
-                  </select>
+                {/* Takeout/Delivery Checkbox */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="wasTakeoutDelivery"
+                      name="wasTakeoutDelivery"
+                      checked={formData.wasTakeoutDelivery}
+                      onChange={(e) => {
+                        const isChecked = e.target.checked
+                        setFormData(prev => ({
+                          ...prev,
+                          wasTakeoutDelivery: isChecked,
+                          atmosphere: isChecked ? '' : prev.atmosphere // Clear atmosphere if takeout
+                        }))
+                      }}
+                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor="wasTakeoutDelivery" className="ml-3 text-sm font-semibold text-gray-700">
+                      Takeout/Delivery Order
+                    </label>
+                  </div>
+                  {formData.wasTakeoutDelivery && (
+                    <p className="text-sm text-blue-600 mt-2 ml-8">
+                      Atmosphere rating not applicable for takeout/delivery
+                    </p>
+                  )}
                 </div>
+
+                {/* Atmosphere - only shown if not takeout/delivery */}
+                {!formData.wasTakeoutDelivery && (
+                  <div>
+                    <label htmlFor="atmosphere" className="block text-sm font-semibold text-gray-700 mb-2">
+                      Atmosphere
+                    </label>
+                    <select
+                      id="atmosphere"
+                      name="atmosphere"
+                      value={formData.atmosphere}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    >
+                      <option value="">Select atmosphere</option>
+                      <option value="quiet">Quiet</option>
+                      <option value="conversational">Conversational</option>
+                      <option value="lively">Lively</option>
+                      <option value="loud">Loud</option>
+                      <option value="very-loud">Very Loud</option>
+                    </select>
+                  </div>
+                )}
 
                 <StarRating
                   value={formData.takeoutQuality}

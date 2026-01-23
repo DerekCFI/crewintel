@@ -36,6 +36,7 @@ interface Review {
   vegetarian_options: boolean
   vegan_options: boolean
   gluten_free_options: boolean
+  was_takeout_delivery: boolean
 }
 
 export default function HotelDetailPage() {
@@ -160,6 +161,11 @@ export default function HotelDetailPage() {
                   <p className="text-xs text-gray-500 mt-1">{review.calculated_rating.toFixed(1)}★</p>
                 </div>
               )}
+              {review.was_takeout_delivery && (
+                <span className="bg-orange-100 text-orange-800 text-sm font-semibold px-3 py-1 rounded-full mt-2 inline-block mr-2">
+                  Takeout/Delivery
+                </span>
+              )}
               {review.would_recommend && (
                 <span className="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full mt-2 inline-block">
                   ✓ Would Recommend
@@ -237,8 +243,8 @@ export default function HotelDetailPage() {
               </div>
             )}
 
-            {/* Atmosphere */}
-            {review.atmosphere && (
+            {/* Atmosphere - hidden for takeout/delivery */}
+            {review.atmosphere && !review.was_takeout_delivery && (
               <div>
                 <p className="text-sm font-semibold text-gray-700 mb-2">Atmosphere</p>
                 <p className="text-gray-600">{formatLabel(review.atmosphere)}</p>
