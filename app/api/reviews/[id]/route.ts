@@ -22,7 +22,25 @@ export async function GET(
       )
     }
 
-    return NextResponse.json({ review: result[0] })
+    // Get photos for this review
+    const photos = await sql`
+      SELECT
+        id,
+        cloudinary_url as url,
+        thumbnail_url,
+        cloudinary_public_id as public_id,
+        display_order,
+        width,
+        height
+      FROM review_photos
+      WHERE review_id = ${parseInt(id)}
+      ORDER BY display_order ASC
+    `
+
+    return NextResponse.json({
+      review: result[0],
+      photos: photos
+    })
   } catch (error) {
     console.error('Error fetching review:', error)
     return NextResponse.json(

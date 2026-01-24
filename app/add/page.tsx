@@ -6,6 +6,7 @@ import { useUser } from '@clerk/nextjs'
 import StarRating from '../components/StarRating'
 import PriceRating from '../components/PriceRating'
 import PlacesAutocomplete from '../components/PlacesAutocomplete'
+import PhotoUpload, { SelectedPhoto, fileToBase64 } from '../components/PhotoUpload'
 
 function AddLocationForm() {
   const router = useRouter()
@@ -103,6 +104,9 @@ function AddLocationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [selectedPhotos, setSelectedPhotos] = useState<SelectedPhoto[]>([])
+  const [uploadingPhotos, setUploadingPhotos] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<string>('')
 
   // Track the previous category to detect changes
   const prevCategoryRef = useRef(formData.category)
@@ -270,11 +274,61 @@ function AddLocationForm() {
       })
 
       if (response.ok) {
+        const reviewData = await response.json()
+        const reviewId = reviewData.id
+
+        // Upload photos if any were selected
+        if (selectedPhotos.length > 0 && reviewId) {
+          setUploadingPhotos(true)
+          setUploadProgress('Uploading photos...')
+
+          try {
+            // Convert photos to base64
+            const photosToUpload = await Promise.all(
+              selectedPhotos.map(async (photo, index) => {
+                setUploadProgress(`Processing photo ${index + 1} of ${selectedPhotos.length}...`)
+                const base64 = await fileToBase64(photo.file)
+                return {
+                  base64,
+                  fileName: photo.file.name,
+                  fileType: photo.file.type,
+                  fileSize: photo.file.size,
+                }
+              })
+            )
+
+            setUploadProgress('Uploading to server...')
+
+            const uploadResponse = await fetch('/api/upload-photos', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                photos: photosToUpload,
+                reviewId,
+                category: formData.category,
+              }),
+            })
+
+            if (!uploadResponse.ok) {
+              const uploadError = await uploadResponse.json()
+              console.error('Photo upload error:', uploadError)
+              // Don't fail the whole submission, just log the error
+              // The review was already created successfully
+            }
+          } catch (photoError) {
+            console.error('Error uploading photos:', photoError)
+            // Don't fail the whole submission
+          } finally {
+            setUploadingPhotos(false)
+            setUploadProgress('')
+          }
+        }
+
         setSubmitSuccess(true)
         // Short delay to show success message before redirect
         setTimeout(() => {
           router.push(`/${formData.category}?success=true`)
-        }, 1000)
+        }, 1500)
       } else {
         // Try to get error details from response
         let errorMessage = 'Failed to submit review. Please try again.'
@@ -1413,6 +1467,24 @@ function AddLocationForm() {
               </p>
             </div>
 
+            {/* Photo Upload */}
+            <PhotoUpload
+              photos={selectedPhotos}
+              onPhotosChange={setSelectedPhotos}
+              disabled={isSubmitting || uploadingPhotos}
+            />
+
+            {/* Upload Progress */}
+            {uploadingPhotos && uploadProgress && (
+              <div className="flex items-center gap-3 text-blue-600">
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span className="text-sm">{uploadProgress}</span>
+              </div>
+            )}
+
             {/* Error Message */}
             {submitError && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-3">
@@ -1442,7 +1514,7 @@ function AddLocationForm() {
             <div className="flex gap-4">
               <button
                 type="submit"
-                disabled={isSubmitting || submitSuccess || formData.reviewText.length < 50 || !formData.category || !formData.locationName || !formData.overallRating}
+                disabled={isSubmitting || uploadingPhotos || submitSuccess || formData.reviewText.length < 50 || !formData.category || !formData.locationName || !formData.overallRating}
                 className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (

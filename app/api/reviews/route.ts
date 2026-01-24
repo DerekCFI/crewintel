@@ -111,6 +111,42 @@ export async function POST(request: Request) {
         break;
     }
 
+    // Upsert business record - create if not exists, get ID
+    // This prevents duplicate businesses with same slug+category
+    const businessResult = await sql`
+      INSERT INTO businesses (
+        business_slug,
+        category,
+        location_name,
+        address,
+        phone,
+        latitude,
+        longitude,
+        airport_code,
+        created_at,
+        updated_at
+      ) VALUES (
+        ${businessSlug},
+        ${body.category},
+        ${body.locationName},
+        ${body.address},
+        ${body.phone || null},
+        ${body.latitude || null},
+        ${body.longitude || null},
+        ${body.airport.toUpperCase()},
+        NOW(),
+        NOW()
+      )
+      ON CONFLICT (business_slug, category) DO UPDATE SET
+        updated_at = NOW(),
+        phone = COALESCE(EXCLUDED.phone, businesses.phone),
+        latitude = COALESCE(EXCLUDED.latitude, businesses.latitude),
+        longitude = COALESCE(EXCLUDED.longitude, businesses.longitude)
+      RETURNING id
+    `
+
+    const businessId = businessResult[0].id
+
     // Insert the review with all fields
     const result = await sql`
       INSERT INTO reviews (
@@ -118,6 +154,7 @@ export async function POST(request: Request) {
         airport_code,
         location_name,
         business_slug,
+        business_id,
         address,
         phone,
         latitude,
@@ -199,6 +236,7 @@ export async function POST(request: Request) {
         ${body.airport.toUpperCase()},
         ${body.locationName},
         ${businessSlug},
+        ${businessId},
         ${body.address},
         ${body.phone || null},
         ${body.latitude || null},

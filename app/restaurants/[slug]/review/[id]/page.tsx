@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { formatVisitDateRange } from '../../../../lib/dateFormatting'
+import PhotoGallery, { Photo } from '../../../../components/PhotoGallery'
 
 interface Review {
   id: number
@@ -43,6 +44,7 @@ export default function HotelDetailPage() {
   const params = useParams() as { slug: string; id: string }
   const router = useRouter()
   const [review, setReview] = useState<Review | null>(null)
+  const [photos, setPhotos] = useState<Photo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
 
@@ -63,6 +65,15 @@ export default function HotelDetailPage() {
       }
       const data = await response.json()
       setReview(data.review)
+      if (data.photos) {
+        setPhotos(data.photos.map((p: any) => ({
+          id: p.id,
+          url: p.cloudinary_url,
+          thumbnailUrl: p.thumbnail_url,
+          width: p.width,
+          height: p.height
+        })))
+      }
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -189,6 +200,14 @@ export default function HotelDetailPage() {
             Reviewed on {new Date(review.created_at).toLocaleDateString()}
           </p>
         </div>
+
+        {/* Photos */}
+        {photos.length > 0 && (
+          <div className="bg-white rounded-lg shadow-md p-8 mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Photos</h2>
+            <PhotoGallery photos={photos} businessName={review.location_name} variant="grid" />
+          </div>
+        )}
 
         {/* Detailed Ratings */}
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">

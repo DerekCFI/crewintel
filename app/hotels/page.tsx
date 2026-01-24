@@ -169,8 +169,8 @@ function HotelsContent() {
                   </div>
                   <div className="flex flex-col items-end">
                     <div className="flex items-center gap-1 mb-2">
-                      {renderStars(Math.round(business.avg_rating))}
-                      <span className="ml-2 text-sm text-gray-600">({business.review_count} {business.review_count === 1 ? 'review' : 'reviews'})</span>
+                      {renderStars(Math.round(Number(business.avg_rating) || 0))}
+                      <span className="ml-2 text-sm text-gray-600">({business.review_count} {Number(business.review_count) === 1 ? 'review' : 'reviews'})</span>
                     </div>
                     {business.has_recommendations && (
                       <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { formatVisitDateRange } from '../../lib/dateFormatting'
+import PhotoGallery, { Photo } from '../../components/PhotoGallery'
 
 interface Review {
   id: number
@@ -13,6 +14,7 @@ interface Review {
   created_at: string
   visit_date: string
   visit_date_end: string
+  photo_count: number
 }
 
 interface Business {
@@ -37,6 +39,7 @@ export default function BusinessPage() {
   const params = useParams() as { slug: string }
   const [business, setBusiness] = useState<Business | null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
+  const [photos, setPhotos] = useState<Photo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
 
@@ -48,10 +51,11 @@ export default function BusinessPage() {
     try {
       const response = await fetch(`/api/businesses/${params.slug}?category=hotels`)
       if (!response.ok) throw new Error('Business not found')
-      
+
       const data = await response.json()
       setBusiness(data.business)
       setReviews(data.reviews)
+      setPhotos(data.photos || [])
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -147,6 +151,19 @@ export default function BusinessPage() {
           </Link>
         </div>
 
+        {/* Photos Section */}
+        {photos.length > 0 && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Photos</h2>
+            <PhotoGallery
+              photos={photos}
+              businessName={business.location_name}
+              maxDisplay={6}
+              variant={photos.length >= 5 ? 'hero' : 'grid'}
+            />
+          </div>
+        )}
+
         {/* Amenities Overview */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-xl font-bold text-gray-900 mb-3">Amenities</h2>
@@ -188,11 +205,21 @@ export default function BusinessPage() {
               <p className="text-gray-700 mb-4">{review.review_text}</p>
 
               <div className="flex justify-between items-center text-sm text-gray-500">
-                <div>
-                  {formatVisitDateRange(review.visit_date, review.visit_date_end) && (
-                    <span>Visited: {formatVisitDateRange(review.visit_date, review.visit_date_end)} • </span>
+                <div className="flex items-center gap-3">
+                  <div>
+                    {formatVisitDateRange(review.visit_date, review.visit_date_end) && (
+                      <span>Visited: {formatVisitDateRange(review.visit_date, review.visit_date_end)} • </span>
+                    )}
+                    <span>Reviewed: {new Date(review.created_at).toLocaleDateString()}</span>
+                  </div>
+                  {review.photo_count > 0 && (
+                    <span className="flex items-center gap-1 text-gray-600">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      {review.photo_count}
+                    </span>
                   )}
-                  <span>Reviewed: {new Date(review.created_at).toLocaleDateString()}</span>
                 </div>
                 <Link
                   href={`/hotels/${params.slug}/review/${review.id}`}

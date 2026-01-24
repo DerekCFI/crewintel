@@ -120,9 +120,52 @@ export async function GET(
       ORDER BY created_at DESC
     `
 
+    // Get all photos for this business (across all reviews)
+    const allPhotos = await sql`
+      SELECT
+        rp.id,
+        rp.review_id,
+        rp.cloudinary_url as url,
+        rp.thumbnail_url,
+        rp.cloudinary_public_id as public_id,
+        rp.display_order,
+        rp.width,
+        rp.height
+      FROM review_photos rp
+      INNER JOIN reviews r ON rp.review_id = r.id
+      WHERE r.business_slug = ${slug}
+      AND r.category = ${category}
+      ORDER BY rp.created_at DESC
+    `
+
+    // Get photo counts per review for the review list
+    const photoCountsResult = await sql`
+      SELECT
+        review_id,
+        COUNT(*) as photo_count
+      FROM review_photos rp
+      INNER JOIN reviews r ON rp.review_id = r.id
+      WHERE r.business_slug = ${slug}
+      AND r.category = ${category}
+      GROUP BY review_id
+    `
+
+    // Create a map of review_id -> photo_count
+    const photoCounts: Record<number, number> = {}
+    for (const row of photoCountsResult) {
+      photoCounts[row.review_id] = Number(row.photo_count)
+    }
+
+    // Add photo count to each review
+    const reviewsWithPhotoCounts = reviews.map(review => ({
+      ...review,
+      photo_count: photoCounts[review.id] || 0
+    }))
+
     return NextResponse.json({
       business: businessResult[0],
-      reviews: reviews
+      reviews: reviewsWithPhotoCounts,
+      photos: allPhotos
     })
   } catch (error) {
     console.error('Error fetching business:', error)

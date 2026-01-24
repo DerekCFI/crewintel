@@ -76,22 +76,27 @@ export async function GET(request: Request) {
     }
 
     // Get aggregated business data with category-specific amenity percentages
+    // Use businesses table for canonical data, join with reviews for aggregates
+    // This prevents duplicate keys when reviews have slightly different addresses
     const businesses = await sql`
       SELECT
-        business_slug,
-        location_name,
-        address,
-        latitude,
-        longitude,
-        airport_code,
-        COUNT(*) as review_count,
-        ROUND(AVG(overall_rating)::numeric, 1) as avg_rating,
-        MAX(created_at) as latest_review_date,
-        BOOL_OR(would_recommend) as has_recommendations
+        b.id as business_id,
+        b.business_slug,
+        b.location_name,
+        b.address,
+        b.latitude,
+        b.longitude,
+        b.airport_code,
+        COUNT(r.id) as review_count,
+        ROUND(AVG(r.overall_rating)::numeric, 1) as avg_rating,
+        MAX(r.created_at) as latest_review_date,
+        BOOL_OR(r.would_recommend) as has_recommendations
         ${sql.unsafe(amenityFields)}
-      FROM reviews
-      WHERE category = ${category}
-      GROUP BY business_slug, location_name, address, latitude, longitude, airport_code
+      FROM businesses b
+      LEFT JOIN reviews r ON r.business_id = b.id
+      WHERE b.category = ${category}
+      GROUP BY b.id, b.business_slug, b.location_name, b.address, b.latitude, b.longitude, b.airport_code
+      HAVING COUNT(r.id) > 0
       ORDER BY latest_review_date DESC
     `
 
