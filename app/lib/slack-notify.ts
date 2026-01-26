@@ -129,6 +129,8 @@ interface FeedbackNotification {
 }
 
 export async function notifySlackFeedback(feedback: FeedbackNotification) {
+  console.log('notifySlackFeedback called with type:', feedback.type, 'feedbackId:', feedback.feedbackId);
+
   const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
   if (!slackWebhookUrl) {
     console.log('Slack notification skipped: SLACK_WEBHOOK_URL not configured');
@@ -216,9 +218,13 @@ export async function notifySlackFeedback(feedback: FeedbackNotification) {
     });
 
     if (!response.ok) {
-      console.error('Slack webhook returned non-OK status:', response.status);
+      const responseText = await response.text();
+      console.error('Slack webhook returned non-OK status:', response.status, responseText);
+    } else {
+      console.log('Slack notification sent successfully for feedback type:', feedback.type);
     }
   } catch (error) {
     console.error('Failed to send Slack feedback notification:', error);
+    throw error; // Re-throw so the caller knows it failed
   }
 }

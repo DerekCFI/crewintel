@@ -106,17 +106,20 @@ export async function POST(request: Request) {
       console.log('New feedback received:', { id: result[0].id, type, name, email })
     }
 
-    // Send Slack notification (fire-and-forget, don't block response)
-    notifySlackFeedback({
-      feedbackId: result[0].id,
-      type: type as 'bug' | 'feature' | 'general' | 'question',
-      message: message.trim(),
-      userName: name.trim(),
-      userEmail: email.trim(),
-      userId: userId || null
-    }).catch(err => {
-      console.error('Slack notification error:', err);
-    });
+    // Send Slack notification (awaited to ensure it completes before function terminates)
+    try {
+      await notifySlackFeedback({
+        feedbackId: result[0].id,
+        type: type as 'bug' | 'feature' | 'general' | 'question',
+        message: message.trim(),
+        userName: name.trim(),
+        userEmail: email.trim(),
+        userId: userId || null
+      });
+    } catch (slackError) {
+      // Log but don't fail the request if Slack notification fails
+      console.error('Slack notification error:', slackError);
+    }
 
     return NextResponse.json({
       success: true,
