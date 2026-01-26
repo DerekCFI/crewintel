@@ -1,0 +1,19 @@
+{
+  "text": "🚀 New CrewIntel update deployed!",
+  "blocks": [
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*CrewIntel Production Deployment*\n✅ Successfully deployed to production"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "Visit the live site to see the latest changes!"
+      }
+    }
+  ]
+}

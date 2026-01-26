@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
+import { auth } from '@clerk/nextjs/server'
 import { uploadToCloudinary, deleteFromCloudinary } from '../../lib/cloudinary'
+import { notifySlackError } from '../../lib/slack-notify'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const MAX_PHOTOS = 5
@@ -23,6 +25,8 @@ interface UploadedPhoto {
 }
 
 export async function POST(request: Request) {
+  const { userId } = await auth()
+
   try {
     const body = await request.json()
     const { photos, reviewId, category } = body as {
@@ -137,6 +141,20 @@ export async function POST(request: Request) {
         console.error(`Failed to upload photo ${i + 1}:`, error)
         uploadErrors.push(`Photo ${i + 1}: ${error.message}`)
 
+        // Notify Slack about the upload failure
+        await notifySlackError(error as Error, {
+          userId: userId || 'unknown',
+          component: 'Photo Upload',
+          action: 'Cloudinary Upload',
+          additionalInfo: {
+            fileName: photo.fileName,
+            fileSize: photo.fileSize,
+            fileType: photo.fileType,
+            reviewId: reviewId,
+            photoIndex: i + 1,
+          }
+        })
+
         // If we've uploaded some photos but failed on others,
         // we should still return partial success
       }
@@ -158,6 +176,14 @@ export async function POST(request: Request) {
     })
   } catch (error: any) {
     console.error('Photo upload error:', error)
+
+    // Notify Slack about the general upload error
+    await notifySlackError(error as Error, {
+      userId: userId || 'unknown',
+      component: 'Photo Upload',
+      action: 'Process Upload Request',
+    })
+
     return NextResponse.json(
       { error: 'Failed to process photo upload' },
       { status: 500 }
@@ -167,10 +193,12 @@ export async function POST(request: Request) {
 
 // DELETE endpoint to remove a photo
 export async function DELETE(request: Request) {
+  const { userId } = await auth()
+  const { searchParams } = new URL(request.url)
+  const photoId = searchParams.get('id')
+  const publicId = searchParams.get('publicId')
+
   try {
-    const { searchParams } = new URL(request.url)
-    const photoId = searchParams.get('id')
-    const publicId = searchParams.get('publicId')
 
     if (!photoId || !publicId) {
       return NextResponse.json(
@@ -192,6 +220,18 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Photo delete error:', error)
+
+    // Notify Slack about the delete error
+    await notifySlackError(error as Error, {
+      userId: userId || 'unknown',
+      component: 'Photo Upload',
+      action: 'Delete Photo',
+      additionalInfo: {
+        photoId,
+        publicId,
+      }
+    })
+
     return NextResponse.json(
       { error: 'Failed to delete photo' },
       { status: 500 }

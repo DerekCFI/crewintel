@@ -1,38 +1,14 @@
 import { NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
 import { calculateHotelRating, calculateFBORating, calculateRestaurantRating, calculateRentalRating } from '../../lib/ratings'
-
-/*
- * Database Schema Updates:
- *
- * -- Universal fields
- * ALTER TABLE reviews ADD COLUMN phone VARCHAR(50);
- * ALTER TABLE reviews ADD COLUMN would_recommend BOOLEAN;
- *
- * -- Hotel fields
- * ALTER TABLE reviews ADD COLUMN room_temperature_control VARCHAR(50);
- * ALTER TABLE reviews DROP COLUMN breakfast_available;
- * ALTER TABLE reviews DROP COLUMN breakfast_quality;
- * ALTER TABLE reviews ADD COLUMN breakfast VARCHAR(50);
- * ALTER TABLE reviews ADD COLUMN breakfast_start_time VARCHAR(100);
- * ALTER TABLE reviews ADD COLUMN room_location_recommendation TEXT;
- * ALTER TABLE reviews ADD COLUMN distance_to_restaurants VARCHAR(50);
- * ALTER TABLE reviews ADD COLUMN dry_cleaning_available BOOLEAN;
- * ALTER TABLE reviews ADD COLUMN in_room_coffee VARCHAR(50);
- * ALTER TABLE reviews ADD COLUMN in_room_microwave BOOLEAN;
- *
- * -- Restaurant fields
- * ALTER TABLE reviews ADD COLUMN healthy_options BOOLEAN;
- * ALTER TABLE reviews ADD COLUMN vegetarian_options BOOLEAN;
- * ALTER TABLE reviews ADD COLUMN vegan_options BOOLEAN;
- * ALTER TABLE reviews ADD COLUMN gluten_free_options BOOLEAN;
- */
+import { checkForSpam } from '../../lib/spam-detection'
+import { sendNewReviewNotification, sendNewLocationNotification } from '../../lib/notifications'
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
-    
+
     if (!category) {
       return NextResponse.json(
         { error: 'Category is required' },
@@ -41,9 +17,9 @@ export async function GET(request: Request) {
     }
 
     const sql = neon(process.env.DATABASE_URL!)
-    
+
     const reviews = await sql`
-      SELECT * FROM reviews 
+      SELECT * FROM reviews
       WHERE category = ${category}
       ORDER BY created_at DESC
     `
@@ -61,7 +37,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    
+
     // Validate required fields
     if (!body.category || !body.airport || !body.locationName || !body.address || !body.overallRating || !body.reviewText) {
       return NextResponse.json(
@@ -89,30 +65,45 @@ export async function POST(request: Request) {
     // Generate business slug from location name
     const businessSlug = body.locationName
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '') // Remove special chars except spaces and hyphens
-      .replace(/\s+/g, '-')          // Replace spaces with hyphens
-      .replace(/-+/g, '-')           // Replace multiple hyphens with single
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
       .trim()
 
     // Calculate detailed rating based on category
-    let calculatedRating = null;
+    let calculatedRating = null
     switch (body.category) {
       case 'hotels':
-        calculatedRating = calculateHotelRating(body);
-        break;
+        calculatedRating = calculateHotelRating(body)
+        break
       case 'fbos':
-        calculatedRating = calculateFBORating(body);
-        break;
+        calculatedRating = calculateFBORating(body)
+        break
       case 'restaurants':
-        calculatedRating = calculateRestaurantRating(body);
-        break;
+        calculatedRating = calculateRestaurantRating(body)
+        break
       case 'rentals':
-        calculatedRating = calculateRentalRating(body);
-        break;
+        calculatedRating = calculateRentalRating(body)
+        break
     }
 
-    // Upsert business record - create if not exists, get ID
-    // This prevents duplicate businesses with same slug+category
+    // Run spam detection
+    const spamCheck = checkForSpam({
+      reviewText: body.reviewText,
+      userEmail: body.userEmail,
+      locationName: body.locationName,
+      overallRating: body.overallRating
+    })
+
+    // Check if this is a new location
+    const existingBusiness = await sql`
+      SELECT id FROM businesses
+      WHERE business_slug = ${businessSlug} AND category = ${body.category}
+      LIMIT 1
+    `
+    const isNewLocation = existingBusiness.length === 0
+
+    // Upsert business record - NEW locations require approval (approved = false)
     const businessResult = await sql`
       INSERT INTO businesses (
         business_slug,
@@ -123,6 +114,7 @@ export async function POST(request: Request) {
         latitude,
         longitude,
         airport_code,
+        approved,
         created_at,
         updated_at
       ) VALUES (
@@ -134,6 +126,7 @@ export async function POST(request: Request) {
         ${body.latitude || null},
         ${body.longitude || null},
         ${body.airport.toUpperCase()},
+        false,
         NOW(),
         NOW()
       )
@@ -142,12 +135,12 @@ export async function POST(request: Request) {
         phone = COALESCE(EXCLUDED.phone, businesses.phone),
         latitude = COALESCE(EXCLUDED.latitude, businesses.latitude),
         longitude = COALESCE(EXCLUDED.longitude, businesses.longitude)
-      RETURNING id
+      RETURNING id, approved
     `
 
     const businessId = businessResult[0].id
 
-    // Insert the review with all fields
+    // Insert the review - auto-flag if spam detected
     const result = await sql`
       INSERT INTO reviews (
         category,
@@ -230,6 +223,8 @@ export async function POST(request: Request) {
         calculated_rating,
         user_id,
         user_email,
+        flagged,
+        spam_score,
         created_at
       ) VALUES (
         ${body.category},
@@ -312,14 +307,42 @@ export async function POST(request: Request) {
         ${calculatedRating},
         ${body.userId || null},
         ${body.userEmail || null},
+        ${spamCheck.autoFlag},
+        ${spamCheck.score},
         NOW()
       )
       RETURNING id
     `
 
-    return NextResponse.json({ 
+    const reviewId = result[0].id
+
+    // Send email notifications (don't block the response)
+    Promise.all([
+      sendNewReviewNotification({
+        id: reviewId,
+        locationName: body.locationName,
+        category: body.category,
+        airportCode: body.airport.toUpperCase(),
+        overallRating: body.overallRating,
+        reviewText: body.reviewText,
+        userEmail: body.userEmail,
+        isNewLocation,
+        spamScore: spamCheck.score,
+        spamReasons: spamCheck.reasons,
+        autoFlagged: spamCheck.autoFlag
+      }),
+      isNewLocation ? sendNewLocationNotification({
+        id: businessId,
+        locationName: body.locationName,
+        category: body.category,
+        airportCode: body.airport.toUpperCase(),
+        address: body.address
+      }) : Promise.resolve()
+    ]).catch(err => console.error('Failed to send notifications:', err))
+
+    return NextResponse.json({
       success: true,
-      id: result[0].id
+      id: reviewId
     })
   } catch (error) {
     console.error('Error creating review:', error)

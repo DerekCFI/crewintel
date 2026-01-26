@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
+import { notifySlackFeedback } from '@/app/lib/slack-notify'
 
 export async function POST(request: Request) {
   try {
@@ -104,6 +105,18 @@ export async function POST(request: Request) {
       console.log('Email notification skipped: RESEND_API_KEY not configured')
       console.log('New feedback received:', { id: result[0].id, type, name, email })
     }
+
+    // Send Slack notification (fire-and-forget, don't block response)
+    notifySlackFeedback({
+      feedbackId: result[0].id,
+      type: type as 'bug' | 'feature' | 'general' | 'question',
+      message: message.trim(),
+      userName: name.trim(),
+      userEmail: email.trim(),
+      userId: userId || null
+    }).catch(err => {
+      console.error('Slack notification error:', err);
+    });
 
     return NextResponse.json({
       success: true,
