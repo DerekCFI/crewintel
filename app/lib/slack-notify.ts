@@ -131,9 +131,33 @@ interface FeedbackNotification {
 export async function notifySlackFeedback(feedback: FeedbackNotification) {
   console.log('notifySlackFeedback called with type:', feedback.type, 'feedbackId:', feedback.feedbackId);
 
-  const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
+  // Channel-specific webhook URLs based on feedback type
+  // Bug reports → #bug-reports channel
+  // Feature requests & General feedback → #feedback channel
+  // Questions → #questions channel
+  const webhookMapping: Record<string, string | undefined> = {
+    bug: process.env.SLACK_WEBHOOK_BUG_REPORTS,
+    feature: process.env.SLACK_WEBHOOK_FEEDBACK,
+    general: process.env.SLACK_WEBHOOK_FEEDBACK,
+    question: process.env.SLACK_WEBHOOK_QUESTIONS
+  };
+
+  const slackWebhookUrl = webhookMapping[feedback.type] || process.env.SLACK_WEBHOOK_URL;
+
+  const channelNames: Record<string, string> = {
+    bug: '#bug-reports',
+    feature: '#feedback',
+    general: '#feedback',
+    question: '#questions'
+  };
+  const targetChannel = channelNames[feedback.type] || '#dev-updates (fallback)';
+
+  console.log('Slack target channel:', targetChannel, 'webhook configured:', !!slackWebhookUrl);
+
   if (!slackWebhookUrl) {
-    console.log('Slack notification skipped: SLACK_WEBHOOK_URL not configured');
+    console.log('Slack notification skipped: No webhook URL configured for type:', feedback.type);
+    console.log('Required env var:', feedback.type === 'bug' ? 'SLACK_WEBHOOK_BUG_REPORTS' :
+                feedback.type === 'question' ? 'SLACK_WEBHOOK_QUESTIONS' : 'SLACK_WEBHOOK_FEEDBACK');
     return;
   }
 
@@ -219,9 +243,9 @@ export async function notifySlackFeedback(feedback: FeedbackNotification) {
 
     if (!response.ok) {
       const responseText = await response.text();
-      console.error('Slack webhook returned non-OK status:', response.status, responseText);
+      console.error('Slack webhook returned non-OK status:', response.status, responseText, 'channel:', targetChannel);
     } else {
-      console.log('Slack notification sent successfully for feedback type:', feedback.type);
+      console.log('Slack notification sent successfully to', targetChannel, 'for feedback type:', feedback.type);
     }
   } catch (error) {
     console.error('Failed to send Slack feedback notification:', error);

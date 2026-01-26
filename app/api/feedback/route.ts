@@ -64,6 +64,7 @@ export async function POST(request: Request) {
     `
 
     // Send email notification (using Resend if configured)
+    console.log('Email notification: checking RESEND_API_KEY...', !!process.env.RESEND_API_KEY)
     if (process.env.RESEND_API_KEY) {
       try {
         const typeLabels: Record<string, string> = {
@@ -73,7 +74,9 @@ export async function POST(request: Request) {
           question: 'Question'
         }
 
-        await fetch('https://api.resend.com/emails', {
+        console.log('Sending email notification for feedback type:', type, 'to: feedback@crewintel.org')
+
+        const emailResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
@@ -96,9 +99,18 @@ export async function POST(request: Request) {
             `
           })
         })
+
+        // Check if Resend API returned an error
+        if (!emailResponse.ok) {
+          const errorBody = await emailResponse.text()
+          console.error('Resend API error:', emailResponse.status, errorBody)
+        } else {
+          const emailResult = await emailResponse.json()
+          console.log('Email sent successfully! Resend ID:', emailResult.id)
+        }
       } catch (emailError) {
         // Log email error but don't fail the request
-        console.error('Failed to send email notification:', emailError)
+        console.error('Failed to send email notification (network error):', emailError)
       }
     } else {
       // Log that email wasn't sent due to missing config
