@@ -1,37 +1,38 @@
 import { NextResponse } from 'next/server'
 import { neon } from '@neondatabase/serverless'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { notifySlackFeedback } from '@/app/lib/slack-notify'
 
 export async function POST(request: Request) {
   try {
+    // Require authentication
+    const { userId } = await auth()
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
+    // Get user details from Clerk
+    const user = await currentUser()
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 401 }
+      )
+    }
+
+    // Extract user info from Clerk profile
+    const name = user.fullName || user.firstName || 'Unknown User'
+    const email = user.emailAddresses.find(e => e.id === user.primaryEmailAddressId)?.emailAddress || ''
+
     const body = await request.json()
+    const { type, message } = body
 
     // Validate required fields
-    const { userId, name, email, type, message } = body
-
-    if (!name || name.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      )
-    }
-
-    if (!email || email.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      )
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Please enter a valid email address' },
-        { status: 400 }
-      )
-    }
-
     if (!type || type.trim().length === 0) {
       return NextResponse.json(
         { error: 'Feedback type is required' },
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
     // Insert feedback into database
     const result = await sql`
       INSERT INTO feedback (user_id, name, email, type, message, status, created_at)
-      VALUES (${userId || null}, ${name.trim()}, ${email.trim()}, ${type}, ${message.trim()}, 'new', NOW())
+      VALUES (${userId}, ${name}, ${email}, ${type}, ${message.trim()}, 'new', NOW())
       RETURNING id
     `
 
@@ -90,7 +91,7 @@ export async function POST(request: Request) {
               <h2>New Feedback Received</h2>
               <p><strong>Type:</strong> ${typeLabels[type] || type}</p>
               <p><strong>From:</strong> ${name} (${email})</p>
-              <p><strong>User ID:</strong> ${userId || 'Not logged in'}</p>
+              <p><strong>User ID:</strong> ${userId}</p>
               <hr>
               <p><strong>Message:</strong></p>
               <p>${message.replace(/\n/g, '<br>')}</p>
@@ -124,9 +125,9 @@ export async function POST(request: Request) {
         feedbackId: result[0].id,
         type: type as 'bug' | 'feature' | 'general' | 'question',
         message: message.trim(),
-        userName: name.trim(),
-        userEmail: email.trim(),
-        userId: userId || null
+        userName: name,
+        userEmail: email,
+        userId: userId
       });
     } catch (slackError) {
       // Log but don't fail the request if Slack notification fails

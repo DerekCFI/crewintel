@@ -13,7 +13,7 @@ interface FeedbackFormData {
 }
 
 export default function FeedbackButton() {
-  const { user } = useUser()
+  const { isSignedIn, user } = useUser()
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -124,6 +124,11 @@ export default function FeedbackButton() {
     feature: 'Feature Request',
     general: 'General Feedback',
     question: 'Question'
+  }
+
+  // Only show feedback button for authenticated users
+  if (!isSignedIn) {
+    return null
   }
 
   return (
