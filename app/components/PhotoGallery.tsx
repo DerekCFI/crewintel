@@ -88,7 +88,7 @@ export default function PhotoGallery({
         {photos.length > 5 && (
           <button
             onClick={() => openLightbox(0)}
-            className="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="mt-2 text-sm text-brand-blue hover:text-brand-blue/80 font-medium"
           >
             View all {photos.length} photos
           </button>
@@ -181,7 +181,7 @@ export default function PhotoGallery({
           {remainingCount > 0 && (
             <button
               onClick={() => openLightbox(0)}
-              className="ml-2 text-blue-600 hover:text-blue-800 font-medium"
+              className="ml-2 text-brand-blue hover:text-brand-blue/80 font-medium"
             >
               View all
             </button>

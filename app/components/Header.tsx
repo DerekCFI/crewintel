@@ -12,7 +12,7 @@ export default function Header() {
   const isAdmin = user?.primaryEmailAddress?.emailAddress === ADMIN_EMAIL
 
   return (
-    <nav className="bg-blue-600 text-white p-4">
+    <nav className="bg-brand-navy text-white p-4">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold" style={{ fontFamily: 'var(--font-work-sans)' }}>
           CrewIntel
@@ -35,7 +35,7 @@ export default function Header() {
             Restaurants
           </Link>
 
-          <Link href="/add" className="bg-white text-blue-600 px-4 py-2 rounded font-semibold hover:bg-gray-100">
+          <Link href="/add" className="bg-brand-orange text-white px-4 py-2 rounded font-semibold hover:bg-brand-orange/90">
             + Add Location
           </Link>
 
@@ -54,7 +54,7 @@ export default function Header() {
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-white text-blue-600 px-4 py-2 rounded font-semibold hover:bg-gray-100">
+              <button className="bg-white text-brand-navy px-4 py-2 rounded font-semibold hover:bg-gray-100">
                 Sign In
               </button>
             </SignInButton>
@@ -76,7 +76,7 @@ export default function Header() {
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-white text-blue-600 px-3 py-1 rounded text-sm font-semibold hover:bg-gray-100">
+              <button className="bg-white text-brand-navy px-3 py-1 rounded text-sm font-semibold hover:bg-gray-100">
                 Sign In
               </button>
             </SignInButton>

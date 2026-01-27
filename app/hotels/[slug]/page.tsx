@@ -67,7 +67,7 @@ export default function BusinessPage() {
     return [...Array(5)].map((_, i) => (
       <svg
         key={i}
-        className={`w-5 h-5 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+        className={`w-5 h-5 ${i < rating ? 'text-brand-orange' : 'text-gray-300'}`}
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -95,7 +95,7 @@ export default function BusinessPage() {
       <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+            <div className="animate-spin h-8 w-8 border-4 border-brand-navy border-t-transparent rounded-full"></div>
             <span className="ml-3 text-gray-600">Loading...</span>
           </div>
         </div>
@@ -110,7 +110,7 @@ export default function BusinessPage() {
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error || 'Business not found'}
           </div>
-          <Link href="/hotels" className="text-blue-600 hover:text-blue-800">
+          <Link href="/hotels" className="text-brand-blue hover:text-brand-blue/80">
             ← Back to Hotels
           </Link>
         </div>
@@ -121,7 +121,7 @@ export default function BusinessPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <Link href="/hotels" className="text-blue-600 hover:text-blue-800 mb-4 inline-block">
+        <Link href="/hotels" className="text-brand-blue hover:text-brand-blue/80 mb-4 inline-block">
           ← Back to Hotels
         </Link>
 
@@ -129,14 +129,14 @@ export default function BusinessPage() {
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{business.location_name}</h1>
+              <h1 className="text-4xl font-bold text-brand-navy mb-2">{business.location_name}</h1>
               <p className="text-gray-600 mb-2">{business.address}</p>
               {business.phone && <p className="text-gray-600 mb-2">📞 {business.phone}</p>}
-              <p className="text-blue-600 font-semibold">✈️ Airport: {business.airport_code}</p>
+              <p className="text-brand-blue font-semibold">✈️ Airport: {business.airport_code}</p>
             </div>
             <div className="text-right">
               <div className="flex items-center justify-end gap-2 mb-2">
-                <span className="text-4xl font-bold text-gray-900">{business.avg_rating}</span>
+                <span className="text-4xl font-bold text-brand-navy">{business.avg_rating}</span>
                 <div className="flex">{renderStars(Math.round(business.avg_rating))}</div>
               </div>
               <p className="text-gray-600 text-sm">{business.review_count} review{business.review_count !== 1 ? 's' : ''}</p>
@@ -145,7 +145,7 @@ export default function BusinessPage() {
 
           <Link
             href={`/add?category=hotels&name=${encodeURIComponent(business.location_name)}&address=${encodeURIComponent(business.address)}`}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block"
+            className="bg-brand-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-navy/90 transition-colors inline-block"
           >
             Review This Hotel
           </Link>
@@ -154,7 +154,7 @@ export default function BusinessPage() {
         {/* Photos Section */}
         {photos.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Photos</h2>
+            <h2 className="text-xl font-bold text-brand-navy mb-4">Photos</h2>
             <PhotoGallery
               photos={photos}
               businessName={business.location_name}
@@ -166,11 +166,11 @@ export default function BusinessPage() {
 
         {/* Amenities Overview */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-3">Amenities</h2>
+          <h2 className="text-xl font-bold text-brand-navy mb-3">Amenities</h2>
 
           <div className="flex flex-wrap gap-2 mb-3">
             {renderAmenityTags(business).map(tag => (
-              <span key={tag.label} className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+              <span key={tag.label} className="inline-flex items-center gap-1 bg-brand-orange/10 text-brand-orange text-xs font-medium px-2.5 py-0.5 rounded">
                 <span>{tag.icon}</span>
                 {tag.label}
               </span>
@@ -186,14 +186,14 @@ export default function BusinessPage() {
 
         {/* Reviews List */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Reviews</h2>
+          <h2 className="text-2xl font-bold text-brand-navy">Reviews</h2>
           
           {reviews.map((review) => (
             <div key={review.id} className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
                   {renderStars(review.overall_rating)}
-                  <span className="font-semibold text-gray-900">{review.overall_rating}</span>
+                  <span className="font-semibold text-brand-navy">{review.overall_rating}</span>
                 </div>
                 {review.would_recommend && (
                   <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
@@ -223,7 +223,7 @@ export default function BusinessPage() {
                 </div>
                 <Link
                   href={`/hotels/${params.slug}/review/${review.id}`}
-                  className="text-blue-600 hover:text-blue-800 font-semibold"
+                  className="text-brand-blue hover:text-brand-blue/80 font-semibold"
                 >
                   View Full Review →
                 </Link>

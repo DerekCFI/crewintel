@@ -51,14 +51,14 @@ export default function SearchBar({ variant = 'homepage', onClose }: SearchBarPr
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={isHeader ? "Search airports..." : "Enter airport code (e.g., ATL, KATL)"}
-            className={`w-full px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
+            className={`w-full px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent text-gray-900 ${
               isHeader ? 'py-2 text-sm' : 'py-4 text-lg'
             }`}
             autoFocus={isHeader}
           />
           <button
             type="submit"
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-blue-600 hover:text-blue-700"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-brand-blue hover:text-brand-blue/80"
             aria-label="Search"
           >
             <svg 

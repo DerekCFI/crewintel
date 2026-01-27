@@ -24,7 +24,7 @@ interface Review {
 }
 
 const categoryConfig: Record<string, { label: string; icon: string; color: string }> = {
-  hotels: { label: 'Hotel', icon: '🏨', color: 'bg-blue-100 text-blue-800' },
+  hotels: { label: 'Hotel', icon: '🏨', color: 'bg-brand-navy/10 text-brand-navy' },
   fbos: { label: 'FBO', icon: '✈️', color: 'bg-purple-100 text-purple-800' },
   restaurants: { label: 'Restaurant', icon: '🍽️', color: 'bg-orange-100 text-orange-800' },
   rentals: { label: 'Car Rental', icon: '🚗', color: 'bg-green-100 text-green-800' }
@@ -92,7 +92,7 @@ export default function SearchResults() {
     return [...Array(5)].map((_, i) => (
       <svg
         key={i}
-        className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+        className={`w-4 h-4 ${i < rating ? 'text-brand-orange' : 'text-gray-300'}`}
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -104,7 +104,7 @@ export default function SearchResults() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+        <div className="animate-spin h-12 w-12 border-4 border-brand-navy border-t-transparent rounded-full"></div>
       </div>
     )
   }
@@ -113,13 +113,13 @@ export default function SearchResults() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Airport Not Found</h1>
+          <h1 className="text-4xl font-bold text-brand-navy mb-4">Airport Not Found</h1>
           <p className="text-gray-600 mb-8">
             We couldn't find an airport matching "{airportQuery}"
           </p>
           <Link 
             href="/" 
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+            className="bg-brand-navy text-white px-6 py-3 rounded-lg hover:bg-brand-navy/90"
           >
             Back to Home
           </Link>
@@ -133,7 +133,7 @@ export default function SearchResults() {
       <div className="max-w-6xl mx-auto">
         {/* Airport Header */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-brand-navy mb-2">
             {airport.iata} / {airport.icao}
           </h1>
           <h2 className="text-xl text-gray-700 mb-1">{airport.name}</h2>
@@ -146,7 +146,7 @@ export default function SearchResults() {
             href={`/hotels?airport=${airport.iata}`}
             className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
           >
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Hotels</h3>
+            <h3 className="text-xl font-semibold text-brand-navy mb-2">Hotels</h3>
             <p className="text-gray-600 text-sm">Find crew-friendly hotels near {airport.iata}</p>
           </Link>
 
@@ -154,7 +154,7 @@ export default function SearchResults() {
             href={`/fbos?airport=${airport.iata}`}
             className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
           >
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">FBOs</h3>
+            <h3 className="text-xl font-semibold text-brand-navy mb-2">FBOs</h3>
             <p className="text-gray-600 text-sm">Browse FBO services at {airport.iata}</p>
           </Link>
 
@@ -162,7 +162,7 @@ export default function SearchResults() {
             href={`/rentals?airport=${airport.iata}`}
             className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
           >
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Car Rentals</h3>
+            <h3 className="text-xl font-semibold text-brand-navy mb-2">Car Rentals</h3>
             <p className="text-gray-600 text-sm">Find rental cars near {airport.iata}</p>
           </Link>
 
@@ -170,18 +170,18 @@ export default function SearchResults() {
             href={`/restaurants?airport=${airport.iata}`}
             className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
           >
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Restaurants</h3>
+            <h3 className="text-xl font-semibold text-brand-navy mb-2">Restaurants</h3>
             <p className="text-gray-600 text-sm">Discover restaurants near {airport.iata}</p>
           </Link>
         </div>
 
         {/* Recent Reviews */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Recent Reviews</h3>
+          <h3 className="text-2xl font-bold text-brand-navy mb-4">Recent Reviews</h3>
 
           {reviewsLoading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+              <div className="animate-spin h-8 w-8 border-4 border-brand-navy border-t-transparent rounded-full"></div>
               <span className="ml-3 text-gray-600">Loading reviews...</span>
             </div>
           ) : reviews.length === 0 ? (
@@ -207,7 +207,7 @@ export default function SearchResults() {
                       </div>
                     </div>
 
-                    <h4 className="font-semibold text-gray-900 mb-1">{review.location_name}</h4>
+                    <h4 className="font-semibold text-brand-navy mb-1">{review.location_name}</h4>
 
                     <p className="text-gray-700 text-sm mb-3">
                       "{review.review_text.substring(0, 150)}{review.review_text.length > 150 ? '...' : ''}"
@@ -219,7 +219,7 @@ export default function SearchResults() {
                       </span>
                       <Link
                         href={`/${review.category}/${review.business_slug}`}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        className="text-brand-blue hover:text-brand-blue/80 font-medium"
                       >
                         Read more →
                       </Link>

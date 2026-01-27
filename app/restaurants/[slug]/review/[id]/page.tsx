@@ -87,7 +87,7 @@ export default function HotelDetailPage() {
         {[...Array(5)].map((_, i) => (
           <svg
             key={i}
-            className={`w-5 h-5 ${i < rating ? 'text-blue-600' : 'text-gray-300'}`}
+            className={`w-5 h-5 ${i < rating ? 'text-brand-orange' : 'text-gray-300'}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -107,7 +107,7 @@ export default function HotelDetailPage() {
     return (
       <div className="flex items-center gap-1">
         {[...Array(count)].map((_, i) => (
-          <span key={i} className="text-2xl text-blue-600">$</span>
+          <span key={i} className="text-2xl text-brand-orange">$</span>
         ))}
       </div>
     )
@@ -118,7 +118,7 @@ export default function HotelDetailPage() {
       <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+            <div className="animate-spin h-8 w-8 border-4 border-brand-navy border-t-transparent rounded-full"></div>
             <span className="ml-3 text-gray-600">Loading review...</span>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function HotelDetailPage() {
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error || 'Restaurant not found'}
           </div>
-          <Link href={`/restaurants/${params.slug}`} className="text-blue-600 hover:text-blue-800">
+          <Link href={`/restaurants/${params.slug}`} className="text-brand-blue hover:text-brand-blue/80">
             ← Back to Restaurant Reviews
           </Link>
         </div>
@@ -145,7 +145,7 @@ export default function HotelDetailPage() {
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Back button */}
-        <Link href={`/restaurants/${params.slug}`} className="text-blue-600 hover:text-blue-800 mb-4 inline-block">
+        <Link href={`/restaurants/${params.slug}`} className="text-brand-blue hover:text-brand-blue/80 mb-4 inline-block">
           ← Back to Restaurant Reviews
         </Link>
 
@@ -153,12 +153,12 @@ export default function HotelDetailPage() {
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{review.location_name}</h1>
+              <h1 className="text-3xl font-bold text-brand-navy mb-2">{review.location_name}</h1>
               <p className="text-gray-600 mb-2">{review.address}</p>
               {review.phone && (
                 <p className="text-gray-600 mb-2">📞 {review.phone}</p>
               )}
-              <p className="text-blue-600 font-semibold">✈️ Airport: {review.airport_code}</p>
+              <p className="text-brand-orange font-semibold">✈️ Airport: {review.airport_code}</p>
             </div>
             <div className="text-right">
               <div className="mb-2">
@@ -194,7 +194,7 @@ export default function HotelDetailPage() {
 
         {/* Review Text */}
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Review</h2>
+          <h2 className="text-2xl font-bold text-brand-navy mb-4">Review</h2>
           <p className="text-gray-700 whitespace-pre-line leading-relaxed">{review.review_text}</p>
           <p className="text-sm text-gray-500 mt-4">
             Reviewed on {new Date(review.created_at).toLocaleDateString()}
@@ -204,14 +204,14 @@ export default function HotelDetailPage() {
         {/* Photos */}
         {photos.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Photos</h2>
+            <h2 className="text-2xl font-bold text-brand-navy mb-4">Photos</h2>
             <PhotoGallery photos={photos} businessName={review.location_name} variant="grid" />
           </div>
         )}
 
         {/* Detailed Ratings */}
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Detailed Ratings</h2>
+          <h2 className="text-2xl font-bold text-brand-navy mb-6">Detailed Ratings</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Food Quality */}
@@ -282,7 +282,7 @@ export default function HotelDetailPage() {
 
         {/* Amenities & Services */}
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Dietary Options & Amenities</h2>
+          <h2 className="text-2xl font-bold text-brand-navy mb-6">Dietary Options & Amenities</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Wi-Fi Available */}

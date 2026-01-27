@@ -2,6 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CrewIntel Brand Color Scheme */
+:root {
+  --brand-navy: #1e3a8a;
+  --brand-orange: #f59e0b;
+  --brand-blue: #3b82f6;
+  --slate-gray: #64748b;
+  --off-white: #f8fafc;
+}
+
+@layer base {
+  /* Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-brand-navy;
+  }
+
+  body {
+    @apply text-slate-gray;
+  }
+}
+
+@layer components {
+  /* Primary button style */
+  .btn-primary {
+    @apply bg-brand-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-navy/90 transition-colors;
+  }
+
+  /* Secondary button style */
+  .btn-secondary {
+    @apply bg-brand-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-orange/90 transition-colors;
+  }
+
+  /* Link style */
+  .link {
+    @apply text-brand-blue hover:text-brand-blue/80 transition-colors;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

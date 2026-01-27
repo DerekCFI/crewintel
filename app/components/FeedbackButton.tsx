@@ -131,7 +131,7 @@ export default function FeedbackButton() {
       {/* Floating Feedback Button */}
       <button
         onClick={handleOpen}
-        className="fixed bottom-6 right-6 z-[9999] flex items-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="fixed bottom-6 right-6 z-[9999] flex items-center gap-2 bg-brand-orange text-white px-4 py-3 rounded-full shadow-lg hover:bg-brand-orange/90 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2"
         aria-label="Send Feedback"
       >
         <svg
@@ -202,7 +202,7 @@ export default function FeedbackButton() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent text-gray-900"
                     placeholder="Your name"
                   />
                 </div>
@@ -219,7 +219,7 @@ export default function FeedbackButton() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent text-gray-900"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -235,7 +235,7 @@ export default function FeedbackButton() {
                     value={formData.type}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent text-gray-900 bg-white"
                   >
                     {(Object.keys(typeLabels) as FeedbackType[]).map(type => (
                       <option key={type} value={type}>{typeLabels[type]}</option>
@@ -256,7 +256,7 @@ export default function FeedbackButton() {
                     required
                     rows={4}
                     minLength={10}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent text-gray-900 resize-none"
                     placeholder="Tell us what's on your mind..."
                   />
                   <p className="text-xs text-gray-500 mt-1">
@@ -276,7 +276,7 @@ export default function FeedbackButton() {
                   <button
                     type="submit"
                     disabled={isSubmitting || formData.message.length < 10}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                    className="flex-1 px-4 py-2 bg-brand-navy text-white rounded-lg font-medium hover:bg-brand-navy/90 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
                   >
                     {isSubmitting ? 'Sending...' : 'Submit'}
                   </button>

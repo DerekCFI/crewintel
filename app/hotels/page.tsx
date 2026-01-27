@@ -69,7 +69,7 @@ function HotelsContent() {
     return [...Array(5)].map((_, i) => (
       <svg
         key={i}
-        className={`w-5 h-5 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+        className={`w-5 h-5 ${i < rating ? 'text-brand-orange' : 'text-gray-300'}`}
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -92,7 +92,7 @@ function HotelsContent() {
     return (
       <div className="flex flex-wrap gap-2 mt-3 mb-3">
         {tags.map(tag => (
-          <span key={tag.label} className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+          <span key={tag.label} className="inline-flex items-center gap-1 bg-brand-orange/10 text-brand-orange text-xs font-medium px-2.5 py-0.5 rounded">
             <span>{tag.icon}</span>
             {tag.label}
           </span>
@@ -105,9 +105,9 @@ function HotelsContent() {
     return (
       <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold text-gray-900 mb-6">Hotels</h1>
+          <h1 className="text-4xl font-bold text-brand-navy mb-6">Hotels</h1>
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+            <div className="animate-spin h-8 w-8 border-4 border-brand-navy border-t-transparent rounded-full"></div>
             <span className="ml-3 text-gray-600">Loading hotels...</span>
           </div>
         </div>
@@ -119,7 +119,7 @@ function HotelsContent() {
     return (
       <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold text-gray-900 mb-6">Hotels</h1>
+          <h1 className="text-4xl font-bold text-brand-navy mb-6">Hotels</h1>
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
             Error loading hotels: {error}
           </div>
@@ -133,12 +133,12 @@ function HotelsContent() {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Hotels</h1>
+            <h1 className="text-4xl font-bold text-brand-navy mb-2">Hotels</h1>
             <p className="text-gray-600">Find crew-friendly hotels with the amenities you need</p>
           </div>
           <Link
             href="/add"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            className="bg-brand-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-navy/90 transition-colors"
           >
             Add Review
           </Link>
@@ -156,7 +156,7 @@ function HotelsContent() {
               <div key={business.business_slug} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                    <h2 className="text-2xl font-bold text-brand-navy mb-1">
                       {business.location_name}
                     </h2>
                     <p className="text-gray-600 text-sm mb-2">{business.address}</p>
@@ -165,7 +165,7 @@ function HotelsContent() {
                         {business.distance_from_airport} miles from {airportCode?.toUpperCase()}
                       </p>
                     )}
-                    <p className="text-blue-600 font-semibold">Airport: {business.airport_code}</p>
+                    <p className="text-brand-blue font-semibold">Airport: {business.airport_code}</p>
                   </div>
                   <div className="flex flex-col items-end">
                     <div className="flex items-center gap-1 mb-2">
@@ -196,7 +196,7 @@ function HotelsContent() {
                   <div className="flex items-center gap-3">
                     <Link
                       href={`/add?category=hotels&name=${encodeURIComponent(business.location_name)}&address=${encodeURIComponent(business.address)}`}
-                      className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                      className="text-brand-blue hover:text-brand-blue/80 font-semibold text-sm"
                     >
                       Review This Hotel
                     </Link>
@@ -207,7 +207,7 @@ function HotelsContent() {
                   </div>
                   <Link
                     href={`/hotels/${business.business_slug}`}
-                    className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                    className="text-brand-blue hover:text-brand-blue/80 font-semibold text-sm"
                   >
                     View All Reviews →
                   </Link>
@@ -225,7 +225,7 @@ export default function HotelsPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 py-8 px-4 flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin h-8 w-8 border-4 border-brand-navy border-t-transparent rounded-full"></div>
       </div>
     }>
       <HotelsContent />

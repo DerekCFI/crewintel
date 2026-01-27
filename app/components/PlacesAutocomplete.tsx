@@ -125,7 +125,7 @@ export default function PlacesAutocomplete({ onPlaceSelect, value, category }: P
         onChange={(e) => setInputValue(e.target.value)}
         onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
         placeholder="Start typing business name or address..."
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
         required
       />
       <p className="text-xs text-gray-500 mt-1">
@@ -133,8 +133,8 @@ export default function PlacesAutocomplete({ onPlaceSelect, value, category }: P
       </p>
 
       {isLoading && (
-        <div className="absolute right-3 top-11 flex items-center gap-2 text-sm text-blue-600">
-          <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="absolute right-3 top-11 flex items-center gap-2 text-sm text-brand-blue">
+          <div className="animate-spin h-4 w-4 border-2 border-brand-blue border-t-transparent rounded-full"></div>
         </div>
       )}
 
@@ -152,9 +152,9 @@ export default function PlacesAutocomplete({ onPlaceSelect, value, category }: P
               key={place.id || index}
               type="button"
               onClick={() => handleSelectPlace(place)}
-              className="w-full text-left px-4 py-3 hover:bg-blue-50 border-b border-gray-100 last:border-b-0 transition-colors"
+              className="w-full text-left px-4 py-3 hover:bg-brand-blue/5 border-b border-gray-100 last:border-b-0 transition-colors"
             >
-              <div className="font-semibold text-gray-900">
+              <div className="font-semibold text-brand-navy">
                 {place.displayName?.text}
               </div>
               <div className="text-sm text-gray-600">

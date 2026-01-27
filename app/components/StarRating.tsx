@@ -30,10 +30,10 @@ export default function StarRating({ value, onChange, label, required = false }:
             <svg
               className={`w-8 h-8 ${
                 hoverValue !== null && star <= hoverValue
-                  ? 'text-[#93c5fd]'
+                  ? 'text-brand-orange/60'
                   : star <= value
-                  ? 'text-[#3b82f6]'
-                  : 'text-[#d1d5db]'
+                  ? 'text-brand-orange'
+                  : 'text-gray-300'
               }`}
               fill="currentColor"
               viewBox="0 0 20 20"

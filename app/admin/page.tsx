@@ -180,7 +180,7 @@ export default function AdminPage() {
           <p className="text-gray-600 mb-6">Please sign in to access the admin panel.</p>
           <Link
             href="/sign-in"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700"
+            className="inline-block bg-brand-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-navy/90"
           >
             Sign In
           </Link>
@@ -198,7 +198,7 @@ export default function AdminPage() {
           <p className="text-gray-600 mb-6">You don&apos;t have permission to access the admin panel.</p>
           <Link
             href="/"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700"
+            className="inline-block bg-brand-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-navy/90"
           >
             Go Home
           </Link>
@@ -213,7 +213,7 @@ export default function AdminPage() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="flex items-center justify-between px-4 py-3">
           <h1 className="text-xl font-bold">CrewIntel Admin</h1>
-          <Link href="/" className="text-blue-600 font-medium">
+          <Link href="/" className="text-brand-blue font-medium">
             Back to Site
           </Link>
         </div>
@@ -224,7 +224,7 @@ export default function AdminPage() {
             onClick={() => setActiveTab('dashboard')}
             className={`flex-1 py-3 text-center font-medium ${
               activeTab === 'dashboard'
-                ? 'text-blue-600 border-b-2 border-blue-600'
+                ? 'text-brand-blue border-b-2 border-brand-blue'
                 : 'text-gray-500'
             }`}
           >
@@ -234,7 +234,7 @@ export default function AdminPage() {
             onClick={() => setActiveTab('locations')}
             className={`flex-1 py-3 text-center font-medium ${
               activeTab === 'locations'
-                ? 'text-blue-600 border-b-2 border-blue-600'
+                ? 'text-brand-blue border-b-2 border-brand-blue'
                 : 'text-gray-500'
             }`}
           >
@@ -244,7 +244,7 @@ export default function AdminPage() {
             onClick={() => setActiveTab('reviews')}
             className={`flex-1 py-3 text-center font-medium ${
               activeTab === 'reviews'
-                ? 'text-blue-600 border-b-2 border-blue-600'
+                ? 'text-brand-blue border-b-2 border-brand-blue'
                 : 'text-gray-500'
             }`}
           >
@@ -285,7 +285,7 @@ export default function AdminPage() {
             {/* Stats Cards */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white rounded-lg p-4 shadow">
-                <div className="text-3xl font-bold text-blue-600">{stats.totalReviews}</div>
+                <div className="text-3xl font-bold text-brand-blue">{stats.totalReviews}</div>
                 <div className="text-gray-500 text-sm">Total Reviews</div>
               </div>
               <div className="bg-white rounded-lg p-4 shadow">

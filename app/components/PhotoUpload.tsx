@@ -132,7 +132,7 @@ export default function PhotoUpload({
       {/* Upload Zone */}
       <div
         className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer
-          ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}
+          ${dragActive ? 'border-brand-blue bg-brand-blue/5' : 'border-gray-300 hover:border-gray-400'}
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           ${photos.length >= MAX_PHOTOS ? 'opacity-50 cursor-not-allowed' : ''}
         `}
@@ -155,7 +155,7 @@ export default function PhotoUpload({
         <div className="flex flex-col items-center gap-2">
           {/* Camera Icon */}
           <svg
-            className={`w-12 h-12 ${dragActive ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`w-12 h-12 ${dragActive ? 'text-brand-blue' : 'text-gray-400'}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -175,7 +175,7 @@ export default function PhotoUpload({
           </svg>
 
           <div className="text-sm">
-            <span className="font-semibold text-blue-600">Click to upload</span>
+            <span className="font-semibold text-brand-blue">Click to upload</span>
             <span className="text-gray-500"> or drag and drop</span>
           </div>
 

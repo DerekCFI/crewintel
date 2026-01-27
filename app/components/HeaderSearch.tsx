@@ -29,7 +29,7 @@ export default function HeaderSearch() {
       {/* Magnifying glass button - always visible */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`p-2 bg-blue-700 hover:bg-blue-800 rounded-full transition-all duration-300 flex-shrink-0 ${
+        className={`p-2 bg-brand-navy/80 hover:bg-brand-navy/70 rounded-full transition-all duration-300 flex-shrink-0 ${
           isExpanded ? 'order-first' : ''
         }`}
         aria-label={isExpanded ? "Close search" : "Search airports"}

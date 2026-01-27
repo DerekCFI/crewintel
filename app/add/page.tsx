@@ -374,7 +374,7 @@ function AddLocationForm() {
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-3xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Add a Location</h1>
+          <h1 className="text-4xl font-bold text-brand-navy mb-2">Add a Location</h1>
           <p className="text-gray-600 mb-8">Share your crew experience to help fellow aviators</p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -389,7 +389,7 @@ function AddLocationForm() {
                 required
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
               >
                 <option value="">Select a category</option>
                 <option value="hotels">Hotel</option>
@@ -412,7 +412,7 @@ function AddLocationForm() {
                 placeholder="e.g., ATL or KATL"
                 value={formData.airport}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                 maxLength={4}
               />
               <p className="text-xs text-gray-500 mt-1">Which airport did you fly into?</p>
@@ -429,8 +429,8 @@ function AddLocationForm() {
 
             {/* Show selected location details */}
             {formData.locationName && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm font-semibold text-gray-900">Selected Location:</p>
+              <div className="bg-brand-blue/5 border border-brand-blue/20 rounded-lg p-4">
+                <p className="text-sm font-semibold text-brand-navy">Selected Location:</p>
                 <p className="text-sm text-gray-700">{formData.locationName}</p>
                 <p className="text-xs text-gray-600">{formData.address}</p>
                 {formData.phone && <p className="text-xs text-gray-600">Phone: {formData.phone}</p>}
@@ -450,7 +450,7 @@ function AddLocationForm() {
                   name="visitDate"
                   value={formData.visitDate}
                   onChange={handleChange}
-                  className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                 />
               </div>
             ) : (
@@ -466,7 +466,7 @@ function AddLocationForm() {
                     name="visitDate"
                     value={formData.visitDate}
                     onChange={handleChange}
-                    className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   />
                 </div>
                 <div>
@@ -488,7 +488,7 @@ function AddLocationForm() {
                       handleChange(e)
                     }}
                     min={formData.visitDate || undefined}
-                    className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   />
                   <p className="text-xs text-gray-500 mt-1">Optional</p>
                 </div>
@@ -508,7 +508,7 @@ function AddLocationForm() {
                   placeholder="e.g., Citation CJ3, King Air 350"
                   value={formData.aircraftType}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                 />
               </div>
             )}
@@ -529,7 +529,7 @@ function AddLocationForm() {
                 name="wouldRecommend"
                 checked={formData.wouldRecommend}
                 onChange={handleChange}
-                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
               />
               <label htmlFor="wouldRecommend" className="ml-3 text-sm font-semibold text-gray-700">
                 Would Recommend
@@ -541,7 +541,7 @@ function AddLocationForm() {
             {/* HOTEL-SPECIFIC FIELDS */}
             {formData.category === 'hotels' && (
               <>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Hotel Details</h3>
+                <h3 className="text-2xl font-bold text-brand-navy mb-4">Hotel Details</h3>
 
                 <div>
                   <label htmlFor="distanceFromAirport" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -553,7 +553,7 @@ function AddLocationForm() {
                     required
                     value={formData.distanceFromAirport}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select distance</option>
                     <option value="walking">Walking Distance</option>
@@ -574,7 +574,7 @@ function AddLocationForm() {
                     placeholder="e.g., Upper floors quieter, avoid rooms near elevator, request courtyard view"
                     value={formData.roomLocationRecommendation}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   />
                 </div>
 
@@ -587,7 +587,7 @@ function AddLocationForm() {
                     name="distanceToRestaurants"
                     value={formData.distanceToRestaurants}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select distance</option>
                     <option value="walking">Walking Distance</option>
@@ -603,7 +603,7 @@ function AddLocationForm() {
                     name="shuttleService"
                     checked={formData.shuttleService}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="shuttleService" className="ml-3 text-sm font-semibold text-gray-700">
                     Shuttle Service Available
@@ -619,7 +619,7 @@ function AddLocationForm() {
                     name="parkingSituation"
                     value={formData.parkingSituation}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select parking situation</option>
                     <option value="not-sure">Not Sure / Used Rideshare or Shuttle</option>
@@ -649,7 +649,7 @@ function AddLocationForm() {
                     required
                     value={formData.staffResponsiveness}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select responsiveness</option>
                     <option value="na">N/A</option>
@@ -668,7 +668,7 @@ function AddLocationForm() {
                     name="crewRecognition"
                     checked={formData.crewRecognition}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="crewRecognition" className="ml-3 text-sm font-semibold text-gray-700">
                     Crew Recognition (crew rates, special treatment)
@@ -699,7 +699,7 @@ function AddLocationForm() {
                     required
                     value={formData.noiseLevel}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select noise level</option>
                     <option value="silent">Silent</option>
@@ -718,7 +718,7 @@ function AddLocationForm() {
                     name="blackoutCurtains"
                     checked={formData.blackoutCurtains}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="blackoutCurtains" className="ml-3 text-sm font-semibold text-gray-700">
                     Blackout Curtains Available
@@ -750,7 +750,7 @@ function AddLocationForm() {
                     name="roomTemperatureControl"
                     value={formData.roomTemperatureControl}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select quality</option>
                     <option value="poor">Poor</option>
@@ -776,7 +776,7 @@ function AddLocationForm() {
                     name="breakfast"
                     value={formData.breakfast}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select option</option>
                     <option value="not-sure">Not Sure / Didn't Use</option>
@@ -799,7 +799,7 @@ function AddLocationForm() {
                       placeholder="e.g., Weekday: 6am, Weekend: 7am"
                       value={formData.breakfastStartTime}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                     />
                   </div>
                 )}
@@ -813,7 +813,7 @@ function AddLocationForm() {
                     name="laundryAvailable"
                     value={formData.laundryAvailable}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select laundry option</option>
                     <option value="not-sure">Not Sure</option>
@@ -832,7 +832,7 @@ function AddLocationForm() {
                     name="dryCleaningAvailable"
                     checked={formData.dryCleaningAvailable}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="dryCleaningAvailable" className="ml-3 text-sm font-semibold text-gray-700">
                     Dry-Cleaning Available
@@ -846,7 +846,7 @@ function AddLocationForm() {
                     name="fitnessCenter"
                     checked={formData.fitnessCenter}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="fitnessCenter" className="ml-3 text-sm font-semibold text-gray-700">
                     Fitness Center Available
@@ -862,7 +862,7 @@ function AddLocationForm() {
                     name="inRoomCoffee"
                     value={formData.inRoomCoffee}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select option</option>
                     <option value="single-cup">Single-Cup Machine</option>
@@ -878,7 +878,7 @@ function AddLocationForm() {
                     name="inRoomMicrowave"
                     checked={formData.inRoomMicrowave}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="inRoomMicrowave" className="ml-3 text-sm font-semibold text-gray-700">
                     In-Room Microwave
@@ -890,7 +890,7 @@ function AddLocationForm() {
             {/* FBO-SPECIFIC FIELDS */}
             {formData.category === 'fbos' && (
               <>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">FBO Details</h3>
+                <h3 className="text-2xl font-bold text-brand-navy mb-4">FBO Details</h3>
 
                 <StarRating
                   value={formData.serviceSpeed}
@@ -908,7 +908,7 @@ function AddLocationForm() {
                     name="lateNightServiceSpeed"
                     value={formData.lateNightServiceSpeed}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select speed</option>
                     <option value="fast">Fast</option>
@@ -925,7 +925,7 @@ function AddLocationForm() {
                     name="twentyfourSevenService"
                     checked={formData.twentyfourSevenService}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="twentyfourSevenService" className="ml-3 text-sm font-semibold text-gray-700">
                     24/7 Service Available
@@ -956,7 +956,7 @@ function AddLocationForm() {
                     required
                     value={formData.passengerCrewFocus}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select focus</option>
                     <option value="crew-focused">Crew-Focused</option>
@@ -976,7 +976,7 @@ function AddLocationForm() {
                     name="fuelPricing"
                     value={formData.fuelPricing}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select fuel pricing</option>
                     <option value="not-sure">Not Sure</option>
@@ -998,7 +998,7 @@ function AddLocationForm() {
                     required
                     value={formData.parkingRampSpace}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select ramp space</option>
                     <option value="excellent">Excellent</option>
@@ -1017,7 +1017,7 @@ function AddLocationForm() {
                     name="hangarAvailability"
                     value={formData.hangarAvailability}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select availability</option>
                     <option value="yes-easy">Yes - Easy</option>
@@ -1044,7 +1044,7 @@ function AddLocationForm() {
                     name="crewCarAvailability"
                     value={formData.crewCarAvailability}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select availability</option>
                     <option value="not-sure">Not Sure / Didn't Use</option>
@@ -1083,7 +1083,7 @@ function AddLocationForm() {
                     name="cateringAvailable"
                     checked={formData.cateringAvailable}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="cateringAvailable" className="ml-3 text-sm font-semibold text-gray-700">
                     Catering Available
@@ -1095,7 +1095,7 @@ function AddLocationForm() {
             {/* RESTAURANT-SPECIFIC FIELDS */}
             {formData.category === 'restaurants' && (
               <>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Restaurant Details</h3>
+                <h3 className="text-2xl font-bold text-brand-navy mb-4">Restaurant Details</h3>
 
                 <div>
                   <label htmlFor="restaurantDistanceFromAirport" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -1107,7 +1107,7 @@ function AddLocationForm() {
                     required
                     value={formData.restaurantDistanceFromAirport}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select distance</option>
                     <option value="walking">Walking Distance</option>
@@ -1127,7 +1127,7 @@ function AddLocationForm() {
                     required
                     value={formData.hoursOfOperation}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select hours</option>
                     <option value="24-hours">24 Hours</option>
@@ -1161,7 +1161,7 @@ function AddLocationForm() {
                     required
                     value={formData.portionSize}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select portion size</option>
                     <option value="small">Small</option>
@@ -1179,7 +1179,7 @@ function AddLocationForm() {
                 />
 
                 {/* Takeout/Delivery Checkbox */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="bg-brand-blue/5 border border-brand-blue/20 rounded-lg p-4">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -1194,14 +1194,14 @@ function AddLocationForm() {
                           atmosphere: isChecked ? '' : prev.atmosphere // Clear atmosphere if takeout
                         }))
                       }}
-                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                     />
                     <label htmlFor="wasTakeoutDelivery" className="ml-3 text-sm font-semibold text-gray-700">
                       Takeout/Delivery Order
                     </label>
                   </div>
                   {formData.wasTakeoutDelivery && (
-                    <p className="text-sm text-blue-600 mt-2 ml-8">
+                    <p className="text-sm text-brand-blue mt-2 ml-8">
                       Atmosphere rating not applicable for takeout/delivery
                     </p>
                   )}
@@ -1218,7 +1218,7 @@ function AddLocationForm() {
                       name="atmosphere"
                       value={formData.atmosphere}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                     >
                       <option value="">Select atmosphere</option>
                       <option value="quiet">Quiet</option>
@@ -1243,7 +1243,7 @@ function AddLocationForm() {
                     name="restaurantWifiAvailable"
                     checked={formData.restaurantWifiAvailable}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="restaurantWifiAvailable" className="ml-3 text-sm font-semibold text-gray-700">
                     Wi-Fi Available
@@ -1257,7 +1257,7 @@ function AddLocationForm() {
                     name="healthyOptions"
                     checked={formData.healthyOptions}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="healthyOptions" className="ml-3 text-sm font-semibold text-gray-700">
                     Healthy Options Available
@@ -1271,7 +1271,7 @@ function AddLocationForm() {
                     name="vegetarianOptions"
                     checked={formData.vegetarianOptions}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="vegetarianOptions" className="ml-3 text-sm font-semibold text-gray-700">
                     Vegetarian Options Available
@@ -1285,7 +1285,7 @@ function AddLocationForm() {
                     name="veganOptions"
                     checked={formData.veganOptions}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="veganOptions" className="ml-3 text-sm font-semibold text-gray-700">
                     Vegan Options Available
@@ -1299,7 +1299,7 @@ function AddLocationForm() {
                     name="glutenFreeOptions"
                     checked={formData.glutenFreeOptions}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="glutenFreeOptions" className="ml-3 text-sm font-semibold text-gray-700">
                     Gluten-Free Options Available
@@ -1311,7 +1311,7 @@ function AddLocationForm() {
             {/* CAR RENTAL-SPECIFIC FIELDS */}
             {formData.category === 'rentals' && (
               <>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Car Rental Details</h3>
+                <h3 className="text-2xl font-bold text-brand-navy mb-4">Car Rental Details</h3>
 
                 <div>
                   <label htmlFor="rentalLocation" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -1323,7 +1323,7 @@ function AddLocationForm() {
                     required
                     value={formData.rentalLocation}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select location</option>
                     <option value="on-airport">On-Airport</option>
@@ -1356,7 +1356,7 @@ function AddLocationForm() {
                     required
                     value={formData.upsellPressure}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select upsell pressure</option>
                     <option value="none">None</option>
@@ -1377,7 +1377,7 @@ function AddLocationForm() {
                     required
                     value={formData.pricingTransparency}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
                   >
                     <option value="">Select transparency</option>
                     <option value="poor">Poor</option>
@@ -1408,7 +1408,7 @@ function AddLocationForm() {
                     name="afterHoursAccess"
                     checked={formData.afterHoursAccess}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="afterHoursAccess" className="ml-3 text-sm font-semibold text-gray-700">
                     After-Hours Access Available
@@ -1422,7 +1422,7 @@ function AddLocationForm() {
                     name="fboDelivery"
                     checked={formData.fboDelivery}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="fboDelivery" className="ml-3 text-sm font-semibold text-gray-700">
                     FBO Delivery Available
@@ -1436,7 +1436,7 @@ function AddLocationForm() {
                     name="crewRatesAvailable"
                     checked={formData.crewRatesAvailable}
                     onChange={handleChange}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue"
                   />
                   <label htmlFor="crewRatesAvailable" className="ml-3 text-sm font-semibold text-gray-700">
                     Crew Rates Available
@@ -1460,7 +1460,7 @@ function AddLocationForm() {
                 placeholder="Share your experience with fellow crew members. What made this location great (or not)? Any crew-specific tips?"
                 value={formData.reviewText}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue text-brand-navy"
               />
               <p className="text-sm text-gray-500 mt-2">
                 Minimum 50 characters ({formData.reviewText.length}/50)
@@ -1476,7 +1476,7 @@ function AddLocationForm() {
 
             {/* Upload Progress */}
             {uploadingPhotos && uploadProgress && (
-              <div className="flex items-center gap-3 text-blue-600">
+              <div className="flex items-center gap-3 text-brand-blue">
                 <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -1515,7 +1515,7 @@ function AddLocationForm() {
               <button
                 type="submit"
                 disabled={isSubmitting || uploadingPhotos || submitSuccess || formData.reviewText.length < 50 || !formData.category || !formData.locationName || !formData.overallRating}
-                className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                className="flex-1 bg-brand-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-navy/90 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>
@@ -1551,7 +1551,7 @@ export default function AddLocationPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 py-8 px-4 flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin h-8 w-8 border-4 border-brand-navy border-t-transparent rounded-full"></div>
       </div>
     }>
       <AddLocationForm />
