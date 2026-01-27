@@ -1,0 +1,81 @@
+name: Notify Slack of Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Get last 2 commits to compare
+
+      - name: Get commit message
+        id: commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          COMMIT_BODY=$(git log -1 --pretty=format:"%b")
+          AUTHOR=$(git log -1 --pretty=format:"%an")
+          echo "message=$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "body=$COMMIT_BODY" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+
+      - name: Send to Slack
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_ANNOUNCEMENTS }}
+        run: |
+          curl -X POST $SLACK_WEBHOOK \
+          -H 'Content-Type: application/json' \
+          -d '{
+            "text": "🚀 CrewIntel Update Deploying",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "🚀 New CrewIntel Update"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*What'\''s New:*\n${{ steps.commit.outputs.message }}"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Deploying now... You'\''ll be able to use these changes in ~2 minutes."
+                }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Visit CrewIntel"
+                    },
+                    "url": "https://crewintel.net",
+                    "style": "primary"
+                  }
+                ]
+              },
+              {
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "Deployed by ${{ steps.commit.outputs.author }}"
+                  }
+                ]
+              }
+            ]
+          }'
