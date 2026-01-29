@@ -50,9 +50,11 @@ export async function GET(request: Request) {
         review_text,
         created_at,
         latitude,
-        longitude
+        longitude,
+        is_quick_log
       FROM reviews
       WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+        AND (status IS NULL OR status = 'published')
       ORDER BY created_at DESC
       LIMIT 100
     `
@@ -67,6 +69,7 @@ export async function GET(request: Request) {
         overall_rating: review.overall_rating as number,
         review_text: review.review_text as string,
         created_at: review.created_at as string,
+        is_quick_log: review.is_quick_log as boolean,
         distance_from_airport: calculateDistance(
           airportData.latitude,
           airportData.longitude,

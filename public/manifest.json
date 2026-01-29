@@ -1,0 +1,27 @@
+{
+  "name": "CrewIntel Quick Log",
+  "short_name": "Quick Log",
+  "description": "Quickly log your crew experiences on the go",
+  "start_url": "/quick-log",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1E3A8A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "utilities"],
+  "scope": "/",
+  "lang": "en-US"
+}

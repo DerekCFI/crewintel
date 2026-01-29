@@ -10,7 +10,7 @@ export async function GET(request: Request) {
 
   try {
     const { searchParams } = new URL(request.url)
-    const status = searchParams.get('status') // 'flagged', 'all'
+    const status = searchParams.get('status') // 'flagged', 'pending', 'all'
     const category = searchParams.get('category')
 
     const sql = neon(process.env.DATABASE_URL!)
@@ -28,11 +28,36 @@ export async function GET(request: Request) {
           r.user_email,
           r.flagged,
           r.spam_score,
+          r.approved,
+          r.is_quick_log,
           r.created_at,
           b.business_slug
         FROM reviews r
         LEFT JOIN businesses b ON r.business_id = b.id
         WHERE r.flagged = true
+        ${category ? sql`AND r.category = ${category}` : sql``}
+        ORDER BY r.created_at DESC
+        LIMIT 100
+      `
+    } else if (status === 'pending') {
+      reviews = await sql`
+        SELECT
+          r.id,
+          r.location_name,
+          r.category,
+          r.airport_code,
+          r.overall_rating,
+          r.review_text,
+          r.user_email,
+          r.flagged,
+          r.spam_score,
+          r.approved,
+          r.is_quick_log,
+          r.created_at,
+          b.business_slug
+        FROM reviews r
+        LEFT JOIN businesses b ON r.business_id = b.id
+        WHERE r.approved IS NULL AND (r.status IS NULL OR r.status = 'published')
         ${category ? sql`AND r.category = ${category}` : sql``}
         ORDER BY r.created_at DESC
         LIMIT 100
@@ -49,6 +74,8 @@ export async function GET(request: Request) {
           r.user_email,
           r.flagged,
           r.spam_score,
+          r.approved,
+          r.is_quick_log,
           r.created_at,
           b.business_slug
         FROM reviews r
@@ -74,7 +101,8 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const { id, flagged } = await request.json()
+    const body = await request.json()
+    const { id, flagged, approved } = body
 
     if (!id) {
       return NextResponse.json({ error: 'Review ID required' }, { status: 400 })
@@ -82,11 +110,23 @@ export async function PATCH(request: Request) {
 
     const sql = neon(process.env.DATABASE_URL!)
 
-    await sql`
-      UPDATE reviews
-      SET flagged = ${flagged}
-      WHERE id = ${id}
-    `
+    // Update flagged if provided
+    if (typeof flagged === 'boolean') {
+      await sql`
+        UPDATE reviews
+        SET flagged = ${flagged}
+        WHERE id = ${id}
+      `
+    }
+
+    // Update approved if provided
+    if (typeof approved === 'boolean') {
+      await sql`
+        UPDATE reviews
+        SET approved = ${approved}
+        WHERE id = ${id}
+      `
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

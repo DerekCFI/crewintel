@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { SignedIn } from '@clerk/nextjs'
 import HeaderSearch from './HeaderSearch'
 
 export default function MobileMenu() {
@@ -98,6 +99,15 @@ export default function MobileMenu() {
                 >
                   Restaurants
                 </Link>
+                <SignedIn>
+                  <Link
+                    href="/my-reviews"
+                    className="text-white hover:bg-brand-navy/80 px-4 py-2 rounded transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    My Reviews
+                  </Link>
+                </SignedIn>
                 <Link
                   href="/add"
                   className="bg-brand-orange text-white px-4 py-2 rounded font-semibold hover:bg-brand-orange/90 transition-colors text-center"

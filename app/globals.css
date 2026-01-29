@@ -19,6 +19,7 @@
 
   body {
     @apply text-slate-gray;
+    font-family: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif;
   }
 }
 

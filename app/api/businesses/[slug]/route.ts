@@ -87,11 +87,13 @@ export async function GET(
         longitude,
         airport_code,
         COUNT(*) as review_count,
+        COUNT(CASE WHEN is_quick_log = true THEN 1 END) as quick_log_count,
         ROUND(AVG(overall_rating)::numeric, 1) as avg_rating
         ${sql.unsafe(amenityFields)}
       FROM reviews
       WHERE business_slug = ${slug}
       AND category = ${category}
+      AND (status IS NULL OR status = 'published')
       GROUP BY business_slug, location_name, address, phone, latitude, longitude, airport_code
       LIMIT 1
     `
@@ -113,10 +115,12 @@ export async function GET(
         created_at,
         visit_date,
         visit_date_end,
-        was_takeout_delivery
+        was_takeout_delivery,
+        is_quick_log
       FROM reviews
       WHERE business_slug = ${slug}
       AND category = ${category}
+      AND (status IS NULL OR status = 'published')
       ORDER BY created_at DESC
     `
 

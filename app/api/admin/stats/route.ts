@@ -18,7 +18,8 @@ export async function GET() {
       categoryStats,
       recentActivity,
       pendingLocations,
-      flaggedReviews
+      flaggedReviews,
+      pendingReviews
     ] = await Promise.all([
       sql`SELECT COUNT(*) as count FROM reviews`,
       sql`SELECT COUNT(*) as count FROM businesses`,
@@ -35,7 +36,8 @@ export async function GET() {
         WHERE created_at > NOW() - INTERVAL '7 days'
       `,
       sql`SELECT COUNT(*) as count FROM businesses WHERE approved = false OR approved IS NULL`,
-      sql`SELECT COUNT(*) as count FROM reviews WHERE flagged = true`
+      sql`SELECT COUNT(*) as count FROM reviews WHERE flagged = true`,
+      sql`SELECT COUNT(*) as count FROM reviews WHERE approved IS NULL AND (status IS NULL OR status = 'published')`
     ])
 
     return NextResponse.json({
@@ -45,7 +47,8 @@ export async function GET() {
       reviewsByCategory: categoryStats,
       recentReviews: parseInt(recentActivity[0].count as string),
       pendingLocations: parseInt(pendingLocations[0].count as string),
-      flaggedReviews: parseInt(flaggedReviews[0].count as string)
+      flaggedReviews: parseInt(flaggedReviews[0].count as string),
+      pendingReviews: parseInt(pendingReviews[0].count as string)
     })
   } catch (error) {
     console.error('Error fetching stats:', error)

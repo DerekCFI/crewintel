@@ -35,6 +35,12 @@ export default function Header() {
             Restaurants
           </Link>
 
+          <SignedIn>
+            <Link href="/my-reviews" className="hover:underline">
+              My Reviews
+            </Link>
+          </SignedIn>
+
           <Link href="/add" className="bg-brand-orange text-white px-4 py-2 rounded font-semibold hover:bg-brand-orange/90">
             + Add Location
           </Link>
